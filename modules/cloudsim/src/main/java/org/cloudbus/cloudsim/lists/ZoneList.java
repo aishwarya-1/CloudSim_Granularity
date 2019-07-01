@@ -116,22 +116,28 @@ public class ZoneList {
 	 * Sets the status of a particular Host on a given Zone.
 	 * 
 	 * @param <T> the generic type
-	 * @param hostList the list of existing hosts
-	 * @param status the PE status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
-	 * @param hostId the host id
-	 * @param peId the id of the PE to set the status
-	 * @return <tt>true</tt> if the PE status has changed, <tt>false</tt> otherwise (host id or
-	 *         PE id might not be exist)
+	 * @param zoneList the list of existing zones.
+	 * @param status the Host status, either <tt>Host.FREE</tt> or <tt>Host.BUSY</tt>
+	 * @param zoneId the zone id
+	 * @param hostId the id of the host to set the status
+	 * @return <tt>true</tt> if the Host status has changed, <tt>false</tt> otherwise (zone id or
+	 *         Host id might not be exist)
+	 * @pre zoneId >= 0
 	 * @pre hostId >= 0
-	 * @pre peId >= 0
 	 * @post $none
 	 */
-	public static <T extends Host> boolean setPeStatus(List<T> hostList, int status, int hostId, int peId) {
-		T host = getById(hostList, hostId);
-		if (host == null) {
+	public static <T extends Zone> boolean setHostStatus(List<T> zoneList, int status, int zoneId, int hostId) {
+		T zone = getById(zoneList, zoneId);
+		if (zone == null) {
 			return false;
 		}
-		return host.setPeStatus(peId, status);
+		return zone.setHostStatus(hostId, status);
 	}
+
+
+
+
+
+
 
 }
