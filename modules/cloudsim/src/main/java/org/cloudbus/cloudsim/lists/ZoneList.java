@@ -4,7 +4,7 @@ package org.cloudbus.cloudsim.lists;
 
 import java.util.List;
 
-import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.Zone;
 
 public class ZoneList {
 
@@ -133,11 +133,4 @@ public class ZoneList {
 		}
 		return zone.setHostStatus(hostId, status);
 	}
-
-
-
-
-
-
-
 }
