@@ -11,6 +11,7 @@ package org.cloudbus.cloudsim.lists;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.Pe;
 
 /**
  * HostList is a collection of operations on lists of hosts (PMs).
@@ -144,5 +145,44 @@ public class HostList {
 		}
 		return host.setPeStatus(peId, status);
 	}
+	
+	
+//	public static int isFreeHost(Host host) {
+//		return 
+//	}
+//	
+//	/**
+//	 * Gets the total number of <tt>FREE</tt> Hosts.
+//	 * 
+//	 * @param <T> the generic type
+//	 * @param hostList the list of existing hosts
+//	 * @return total number of free Hosts
+//	 * @pre $none
+//	 * @post $result >= 0
+//	 */
+//	public static int getNumberOfFreeHosts(List<T> hostList) {
+//		int numberOfFreeHosts = 0;
+//		for (T host : hostList) {
+//			numberOfFreeHosts += PeList.getNumberOfFreePes(host.getPeList());
+//		}
+//		return numberOfFreePes;
+//	}
+//	/**
+//	 * Sets the status of PEs of a host to FAILED or FREE.
+//	 * 
+//	 * @param peList the host's PE list to be set as failed or free
+//	 * @param failed true if the host's PEs have to be set as FAILED, false
+//         * if they have to be set as FREE.
+//	 */
+//	public static <T extends Host> void setStatusFailed(List<T> hostList, boolean failed) {
+//		// a loop to set the status of all the Hosts in this machine
+//		for (Host host : hostList) {
+//			if (failed) {
+//				host.setStatus(Host.FAILED);
+//			} else {
+//				host.setStatus(Host.FREE);
+//			}
+//		}
+//	}
 
 }

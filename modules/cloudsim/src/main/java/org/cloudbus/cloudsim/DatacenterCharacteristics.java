@@ -8,9 +8,11 @@
 
 package org.cloudbus.cloudsim;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.lists.ZoneList;
 import org.cloudbus.cloudsim.lists.HostList;
 import org.cloudbus.cloudsim.lists.PeList;
 
@@ -40,8 +42,8 @@ public class DatacenterCharacteristics {
 	/** The Operating System (OS) of the resource. */
 	private String os;
 
-	/** The hosts owned by the datacenter. */
-	private List<? extends Host> hostList;
+	/** The zones owned by the datacenter. */
+	private List<? extends Zone> zoneList;
 
 	/** The time zone, defined as the difference from GMT. */
 	private double timeZone;
@@ -96,7 +98,7 @@ public class DatacenterCharacteristics {
 	 * @param architecture the architecture of the datacenter
 	 * @param os the operating system used on the datacenter's PMs
 	 * @param vmm the virtual machine monitor used
-	 * @param hostList list of machines in the datacenter
+	 * @param zoneList list of zones in the datacenter
 	 * @param timeZone local time zone of a user that owns this reservation. Time zone should be of
 	 *            range [GMT-12 ... GMT+13]
 	 * @param costPerSec the cost per sec of CPU use in the datacenter
@@ -118,7 +120,7 @@ public class DatacenterCharacteristics {
 			String architecture,
 			String os,
 			String vmm,
-			List<? extends Host> hostList,
+			List<? extends Zone> zoneList,
 			double timeZone,
 			double costPerSec,
 			double costPerMem,
@@ -127,7 +129,7 @@ public class DatacenterCharacteristics {
 		setId(-1);
 		setArchitecture(architecture);
 		setOs(os);
-		setHostList(hostList);
+		setZoneList(zoneList);
                 /*@todo allocationPolicy is not a parameter. It is setting
                 the attribute to itself, what has not effect. */
 		setAllocationPolicy(allocationPolicy);
@@ -565,18 +567,46 @@ public class DatacenterCharacteristics {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Host> List<T> getHostList() {
+		List<Host> hostList = new ArrayList<Host>();
+		for (Zone zone : zoneList) {
+			hostList.addAll(zone.getHostList());
+		}
 		return (List<T>) hostList;
 	}
 
+	
 	/**
 	 * Sets the host list.
 	 * 
 	 * @param <T> the generic type
 	 * @param hostList the new host list
 	 */
-	protected <T extends Host> void setHostList(List<T> hostList) {
-		this.hostList = hostList;
+//	protected <T extends Host> void setHostList(List<T> List) {
+//		this.hostList = hostList;
+//	}
+	
+	/**
+	 * Sets the zone list.
+	 * 
+	 * @param <T> the generic type
+	 * @param zoneList the new zone list
+	 */
+	protected <T extends Zone> void setZoneList(List<T> zoneList) {
+		this.zoneList = zoneList;
 	}
+	
+	/**
+	 * Gets the zone list.
+	 * 
+	 * @param <T> the generic type
+	 * @return the zone list
+         * @todo check this warning below
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends Zone> List<T> getZoneList() {
+		return (List<T>) zoneList;
+	}
+
 
 	/**
 	 * Gets the time zone.
