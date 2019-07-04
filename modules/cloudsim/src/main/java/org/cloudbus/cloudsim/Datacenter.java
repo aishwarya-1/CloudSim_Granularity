@@ -95,8 +95,8 @@ public class Datacenter extends SimEntity {
 		setVmList(new ArrayList<Vm>());
 		setSchedulingInterval(schedulingInterval);
 
-		for (Host host : getCharacteristics().getHostList()) {
-			host.setDatacenter(this);
+		for (Zone zone : getCharacteristics().getZoneList()) {
+			zone.setDatacenter(this);
 		}
 
 		// If this resource doesn't have any PEs then no useful at all
