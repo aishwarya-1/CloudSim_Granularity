@@ -55,8 +55,8 @@ public class Host {
 	/** The VMs migrating in. */
 	private final List<Vm> vmsMigratingIn = new ArrayList<Vm>();
 
-	/** The datacenter where the host is placed. */
-	private Datacenter datacenter;
+	/** The zone where the host is placed. */
+	private Zone zone;
 
 	/**
 	 * Instantiates a new host.
@@ -613,21 +613,21 @@ public class Host {
 	}
 
 	/**
-	 * Gets the data center of the host.
+	 * Gets the zone of the host.
 	 * 
-	 * @return the data center where the host runs
+	 * @return the zone where the host runs
 	 */
-	public Datacenter getDatacenter() {
-		return datacenter;
+	public Zone getZone() {
+		return zone;
 	}
 
 	/**
-	 * Sets the data center of the host.
+	 * Sets the zone of the host.
 	 * 
-	 * @param datacenter the data center from this host
+	 * @param zone the data center from this host
 	 */
-	public void setDatacenter(Datacenter datacenter) {
-		this.datacenter = datacenter;
+	public void setZone(Zone zone) {
+		this.zone = zone;
 	}
 
 }
