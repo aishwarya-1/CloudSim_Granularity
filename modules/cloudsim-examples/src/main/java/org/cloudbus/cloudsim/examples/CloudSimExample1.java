@@ -30,6 +30,7 @@ import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
+import org.cloudbus.cloudsim.Zone;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -190,6 +191,9 @@ public class CloudSimExample1 {
 				new VmSchedulerTimeShared(peList)
 			)
 		); // This is our machine
+		
+		List<Zone> zoneList = new ArrayList<Zone>();
+		zoneList.add(new Zone(0, hostList));
 
 		// 5. Create a DatacenterCharacteristics object that stores the
 		// properties of a data center: architecture, OS, list of
@@ -208,7 +212,7 @@ public class CloudSimExample1 {
 													// devices by now
 
 		DatacenterCharacteristics characteristics = new DatacenterCharacteristics(
-				arch, os, vmm, hostList, time_zone, cost, costPerMem,
+				arch, os, vmm, zoneList, time_zone, cost, costPerMem,
 				costPerStorage, costPerBw);
 
 		// 6. Finally, we need to create a PowerDatacenter object.
