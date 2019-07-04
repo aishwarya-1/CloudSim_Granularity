@@ -10,6 +10,8 @@ import org.cloudbus.cloudsim.lists.HostList;
 //import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 //import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
+@SuppressWarnings("unused")
+
 public class Zone {
 
 	/** The id of the zone. */
