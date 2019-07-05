@@ -73,6 +73,7 @@ public class Host {
 			RamProvisioner ramProvisioner,
 			BwProvisioner bwProvisioner,
 			long storage,
+			//Zone zone,
 			List<? extends Pe> peList,
 			VmScheduler vmScheduler) {
 		setId(id);
@@ -80,7 +81,7 @@ public class Host {
 		setBwProvisioner(bwProvisioner);
 		setStorage(storage);
 		setVmScheduler(vmScheduler);
-
+		//setZone(zone);
 		setPeList(peList);
 		setFailed(false);
 	}

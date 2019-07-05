@@ -36,7 +36,7 @@ public class Zone {
 	public Zone(int id, List<? extends Host> hostList){
 		setId(id);
 		setHostList(hostList);
-		//setFailed(false);
+		setHost();
 	}
 
 	/**
@@ -78,6 +78,12 @@ public class Zone {
 	 */
 	protected <T extends Host> void setHostList(List<T> hostList) {
 		this.hostList = hostList;
+	}
+	
+	public void setHost() {
+		for (Host host : getHostList()) {
+			host.setZone(this);
+		}
 	}
 	
 
