@@ -29,6 +29,7 @@ import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
+import org.cloudbus.cloudsim.Zone;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -159,31 +160,32 @@ public class CloudSimExample3 {
 		// Here are the steps needed to create a PowerDatacenter:
 		// 1. We need to create a list to store
 		//    our machine
-		List<Host> hostList = new ArrayList<Host>();
+		List<Host> hostList1 = new ArrayList<Host>();
+		List<Host> hostList2 = new ArrayList<Host>();
 
 		// 2. A Machine contains one or more PEs or CPUs/Cores.
 		// In this example, it will have only one core.
-		List<Pe> peList = new ArrayList<Pe>();
+		List<Pe> peList1 = new ArrayList<Pe>();
 
 		int mips = 1000;
 
 		// 3. Create PEs and add these into a list.
-		peList.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
-
+		peList1.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
+		
 		//4. Create Hosts with its id and list of PEs and add them to the list of machines
 		int hostId=0;
 		int ram = 2048; //host memory (MB)
 		long storage = 1000000; //host storage
 		int bw = 10000;
 
-		hostList.add(
+		hostList1.add(
     			new Host(
     				hostId,
     				new RamProvisionerSimple(ram),
     				new BwProvisionerSimple(bw),
     				storage,
-    				peList,
-    				new VmSchedulerTimeShared(peList)
+    				peList1,
+    				new VmSchedulerTimeShared(peList1)
     			)
     		); // This is our first machine
 
@@ -194,7 +196,7 @@ public class CloudSimExample3 {
 
 		hostId++;
 
-		hostList.add(
+		hostList2.add(
     			new Host(
     				hostId,
     				new RamProvisionerSimple(ram),
@@ -205,7 +207,10 @@ public class CloudSimExample3 {
     			)
     		); // This is our second machine
 
-
+		List<Zone> zoneList = new ArrayList<Zone>();
+		zoneList.add(new Zone(0, hostList1));
+		zoneList.add(new Zone(1, hostList2));
+		
 
 		// 5. Create a DatacenterCharacteristics object that stores the
 		//    properties of a data center: architecture, OS, list of
@@ -222,12 +227,12 @@ public class CloudSimExample3 {
 		LinkedList<Storage> storageList = new LinkedList<Storage>();	//we are not adding SAN devices by now
 
         DatacenterCharacteristics characteristics = new DatacenterCharacteristics(
-                arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
+                arch, os, vmm, zoneList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
 
 		// 6. Finally, we need to create a PowerDatacenter object.
 		Datacenter datacenter = null;
 		try {
-			datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(hostList), storageList, 0);
+			datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(characteristics.getHostList()), storageList, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -229,7 +229,7 @@ public class DatacenterBroker extends SimEntity {
 			getVmsToDatacentersMap().put(vmId, datacenterId);
 			getVmsCreatedList().add(VmList.getById(getVmList(), vmId));
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": VM #", vmId,
-					" has been created in Datacenter #", datacenterId, ", Host #",
+					" has been created in Datacenter #", datacenterId, ", Zone #", VmList.getById(getVmsCreatedList(), vmId).getHost().getZone().getId(), "Host #",
 					VmList.getById(getVmsCreatedList(), vmId).getHost().getId());
 		} else {
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
