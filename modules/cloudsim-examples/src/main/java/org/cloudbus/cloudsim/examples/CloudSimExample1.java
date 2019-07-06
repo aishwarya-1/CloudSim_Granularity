@@ -250,6 +250,7 @@ public class CloudSimExample1 {
 	 *
 	 * @param list list of Cloudlets
 	 */
+	@SuppressWarnings("deprecation")
 	private static void printCloudletList(List<Cloudlet> list) {
 		int size = list.size();
 		Cloudlet cloudlet;
