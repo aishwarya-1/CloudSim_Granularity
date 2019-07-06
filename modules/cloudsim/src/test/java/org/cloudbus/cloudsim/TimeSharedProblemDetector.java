@@ -183,6 +183,10 @@ public class TimeSharedProblemDetector {
 				new VmSchedulerTimeSharedOverSubscription(peList)
 			)
 		); // This is our machine
+		
+		int zoneId = 0;
+		List<Zone> zoneList = new ArrayList<Zone>();
+		zoneList.add(new Zone(zoneId, hostList));
 
 		// 5. Create a DatacenterCharacteristics object that stores the
 		// properties of a data center: architecture, OS, list of
@@ -201,13 +205,13 @@ public class TimeSharedProblemDetector {
 													// devices by now
 
 		DatacenterCharacteristics characteristics = new DatacenterCharacteristics(
-				arch, os, vmm, hostList, time_zone, cost, costPerMem,
+				arch, os, vmm, zoneList, time_zone, cost, costPerMem,
 				costPerStorage, costPerBw);
 
 		// 6. Finally, we need to create a PowerDatacenter object.
 		Datacenter datacenter = null;
 		try {
-			datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(hostList), storageList, 0);
+			datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(characteristics.getHostList()), storageList, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -239,6 +243,7 @@ public class TimeSharedProblemDetector {
 	 *
 	 * @param list list of Cloudlets
 	 */
+	@SuppressWarnings("deprecation")
 	private static void printCloudletList(List<Cloudlet> list) {
 		int size = list.size();
 		Cloudlet cloudlet;
