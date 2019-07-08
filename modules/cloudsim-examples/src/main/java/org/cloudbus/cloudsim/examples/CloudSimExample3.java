@@ -278,7 +278,7 @@ public class CloudSimExample3 {
 				Log.print("SUCCESS");
 
 				Log.printLine( indent + indent + cloudlet.getResourceId()
-							+ indent + indent +  vmAllocater(cloudlet.getVmId(), getU)
+							+ indent + indent +  vmAllocater(cloudlet.getVmId(), getUserId)
 							+ indent + indent + indent + cloudlet.getVmId() 
 							+ indent + indent + dft.format(cloudlet.getActualCPUTime())
 							+ indent + indent + dft.format(cloudlet.getExecStartTime())
