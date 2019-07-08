@@ -232,7 +232,8 @@ public class CloudSimExample3 {
 		// 6. Finally, we need to create a PowerDatacenter object.
 		Datacenter datacenter = null;
 		try {
-			datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(characteristics.getHostList()), storageList, 0);
+			VmAllocationPolicySimple vmAllocater = new VmAllocationPolicySimple(characteristics.getHostList());
+			datacenter = new Datacenter(name, characteristics, vmAllocater, storageList, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -258,7 +259,7 @@ public class CloudSimExample3 {
 	 * Prints the Cloudlet objects
 	 * @param list  list of Cloudlets
 	 */
-	private static void printCloudletList(List<Cloudlet> list) {
+	private static void printCloudletList(List<Cloudlet> list, VmAllocationPolicySimple vmAllocater) {
 		int size = list.size();
 		Cloudlet cloudlet;
 
@@ -266,7 +267,7 @@ public class CloudSimExample3 {
 		Log.printLine();
 		Log.printLine("========== OUTPUT ==========");
 		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent +
-				"Data center ID" + indent + "VM ID" + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
+				"Data center ID" + indent + "Host ID" + indent + "VM ID" + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
 		for (int i = 0; i < size; i++) {
@@ -276,9 +277,12 @@ public class CloudSimExample3 {
 			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS){
 				Log.print("SUCCESS");
 
-				Log.printLine( indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() +
-						indent + indent + dft.format(cloudlet.getActualCPUTime()) + indent + indent + dft.format(cloudlet.getExecStartTime())+
-						indent + indent + dft.format(cloudlet.getFinishTime()));
+				Log.printLine( indent + indent + cloudlet.getResourceId()
+							+ indent + indent +  vmAllocater(cloudlet.getVmId(), getU)
+							+ indent + indent + indent + cloudlet.getVmId() 
+							+ indent + indent + dft.format(cloudlet.getActualCPUTime())
+							+ indent + indent + dft.format(cloudlet.getExecStartTime())
+							+ indent + indent + dft.format(cloudlet.getFinishTime()));
 			}
 		}
 
