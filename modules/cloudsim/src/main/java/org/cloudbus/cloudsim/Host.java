@@ -57,7 +57,13 @@ public class Host {
 
 	/** The zone where the host is placed. */
 	private Zone zone;
-
+	
+//	/** The host on the left. */
+//	private Host l_host;
+//	
+//	/** The host on the right */
+//	private Host r_host;
+	
 	/**
 	 * Instantiates a new host.
 	 * 
