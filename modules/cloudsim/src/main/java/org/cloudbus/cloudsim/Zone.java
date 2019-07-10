@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.HostList;
+//import org.cloudbus.cloudsim.lists.T;
 
 //import org.cloudbus.cloudsim.lists.PeList;
 //import org.cloudbus.cloudsim.provisioners.BwProvisioner;
@@ -83,6 +84,34 @@ public class Zone {
 	public void setHost() {
 		for (Host host : getHostList()) {
 			host.setZone(this);
+		}
+	}
+	
+	/**
+	 * @param <T>
+	 * @return 
+	 * @return the l_host
+	 */
+	public int getL_host(int hostId) {
+		if(hostId>0) {
+			return (HostList.getById(getHostList(), hostId-1)).getId();
+		}
+		else{
+			return -1;
+		}
+	}
+	
+	/**
+	 * @param <T>
+	 * @return 
+	 * @return the l_host
+	 */
+	public int getR_host(int hostId) {
+		if(hostId>0) {
+			return (HostList.getById(getHostList(), hostId+1)).getId();
+		}
+		else{
+			return -1;
 		}
 	}
 	
