@@ -233,7 +233,7 @@ public class DatacenterBroker extends SimEntity {
 					", Zone #", VmList.getById(getVmsCreatedList(), vmId).getHost().getZone().getId(), 
 					" Host #", 	VmList.getById(getVmsCreatedList(), vmId).getHost().getId(), 
 					" L Host # ", (VmList.getById(getVmsCreatedList(), vmId).getHost().getZone()).getL_host(VmList.getById(getVmsCreatedList(), vmId).getHost().getId()),
-					"R Host # ", (VmList.getById(getVmsCreatedList(), vmId).getHost().getZone()).getR_host(VmList.getById(getVmsCreatedList(), vmId).getHost().getId()));
+					" R Host # ", (VmList.getById(getVmsCreatedList(), vmId).getHost().getZone()).getR_host(VmList.getById(getVmsCreatedList(), vmId).getHost().getId()));
 		} else {
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
 					" failed in Datacenter #", datacenterId);
