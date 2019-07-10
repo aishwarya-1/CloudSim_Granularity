@@ -19,6 +19,7 @@ import org.cloudbus.cloudsim.Pe;
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
  */
+@SuppressWarnings("unused")
 public class HostList {
 
 	/**
@@ -145,7 +146,22 @@ public class HostList {
 		}
 		return host.setPeStatus(peId, status);
 	}
+
+	public static <T extends Host> int size(List<T> hostList) {
+//		int size = 0;
+//		for (T host : hostList) {
+//			size++;
+//			}
+//		}
+		return hostList.size();
+	}
 	
+//	/**
+//	 * @param l_host the l_host to set
+//	 */
+//	public void setL_host(Host l_host) {
+//		this.l_host = l_host;
+//	}
 	
 //	public static int isFreeHost(Host host) {
 //		return 
