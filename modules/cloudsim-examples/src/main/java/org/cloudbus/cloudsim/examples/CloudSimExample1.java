@@ -108,6 +108,18 @@ public class CloudSimExample1 {
 
 			// add the VM to the vmList
 			vmlist.add(vm);
+			
+			// create VM
+			Vm vm1 = new Vm(++vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+
+			// add the VM to the vmList
+			vmlist.add(vm1);
+						
+			// create VM
+			Vm vm2 = new Vm(++vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+
+			// add the VM to the vmList
+			vmlist.add(vm2);
 
 			// submit vm list to the broker
 			broker.submitVmList(vmlist);
@@ -127,10 +139,31 @@ public class CloudSimExample1 {
                                         outputSize, utilizationModel, utilizationModel, 
                                         utilizationModel);
 			cloudlet.setUserId(brokerId);
-			cloudlet.setVmId(vmid);
+			//cloudlet.setVmId(vmid);
 
 			// add the cloudlet to the list
 			cloudletList.add(cloudlet);
+			
+			Cloudlet cloudlet1 = 
+                    new Cloudlet(++id, length, pesNumber, fileSize, 
+                            outputSize, utilizationModel, utilizationModel, 
+                            utilizationModel);
+			cloudlet1.setUserId(brokerId);
+			//cloudlet.setVmId(vmid);
+			
+			
+			// add the cloudlet to the list
+			cloudletList.add(cloudlet1);
+			
+			Cloudlet cloudlet2 = 
+                    new Cloudlet(++id, length, pesNumber, fileSize, 
+                            outputSize, utilizationModel, utilizationModel, 
+                            utilizationModel);
+			cloudlet2.setUserId(brokerId);
+			//cloudlet.setVmId(vmid);
+			
+			// add the cloudlet to the list
+			cloudletList.add(cloudlet2);
 
 			// submit cloudlet list to the broker
 			broker.submitCloudletList(cloudletList);
@@ -168,12 +201,18 @@ public class CloudSimExample1 {
 		// 2. A Machine contains one or more PEs or CPUs/Cores.
 		// In this example, it will have only one core.
 		List<Pe> peList = new ArrayList<Pe>();
+		List<Pe> peList1 = new ArrayList<Pe>();
+		List<Pe> peList2 = new ArrayList<Pe>();
+		List<Pe> peList3 = new ArrayList<Pe>();
 
 		int mips = 1000;
 
 		// 3. Create PEs and add these into a list.
 		peList.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
-
+		peList1.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
+		peList2.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
+		peList3.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
+		
 		// 4. Create Host with its id and list of PEs and add them to the list
 		// of machines
 		int hostId = 0;
@@ -190,7 +229,41 @@ public class CloudSimExample1 {
 				peList,
 				new VmSchedulerTimeShared(peList)
 			)
-		); // This is our machine
+		); 
+		
+		
+		hostList.add(
+				new Host(
+					hostId++,
+					new RamProvisionerSimple(ram),
+					new BwProvisionerSimple(bw),
+					storage,
+					peList,
+					new VmSchedulerTimeShared(peList1)
+				)
+			);
+		
+		hostList.add(
+				new Host(
+					hostId++,
+					new RamProvisionerSimple(ram),
+					new BwProvisionerSimple(bw),
+					storage,
+					peList,
+					new VmSchedulerTimeShared(peList2)
+				)
+			);
+		
+		hostList.add(
+				new Host(
+					hostId++,
+					new RamProvisionerSimple(ram),
+					new BwProvisionerSimple(bw),
+					storage,
+					peList,
+					new VmSchedulerTimeShared(peList3)
+				)
+			);// This is our machine
 		
 		List<Zone> zoneList = new ArrayList<Zone>();
 		zoneList.add(new Zone(0, hostList));
