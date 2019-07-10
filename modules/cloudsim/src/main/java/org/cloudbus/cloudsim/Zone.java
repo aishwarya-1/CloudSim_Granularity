@@ -107,7 +107,7 @@ public class Zone {
 	 * @return the l_host
 	 */
 	public int getR_host(int hostId) {
-		if(hostId>0) {
+		if(hostId<HostList.size(getHostList())-1) {
 			return (HostList.getById(getHostList(), hostId+1)).getId();
 		}
 		else{
