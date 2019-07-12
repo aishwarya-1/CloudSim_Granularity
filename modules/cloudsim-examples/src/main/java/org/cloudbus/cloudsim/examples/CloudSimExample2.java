@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.cloudbus.cloudsim.Aisle;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.Datacenter;
@@ -24,12 +25,14 @@ import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
+import org.cloudbus.cloudsim.Rack;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
+import org.cloudbus.cloudsim.Zone;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -96,9 +99,13 @@ public class CloudSimExample2 {
 	            	vmid++;
 	            	Vm vm2 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
+	            	vmid++;
+	            	Vm vm3 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+
 	            	//add the VMs to the vmList
 	            	vmlist.add(vm1);
 	            	vmlist.add(vm2);
+	            	vmlist.add(vm3);
 
 	            	//submit vm list to the broker
 	            	broker.submitVmList(vmlist);
@@ -121,10 +128,15 @@ public class CloudSimExample2 {
 	            	id++;
 	            	Cloudlet cloudlet2 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 	            	cloudlet2.setUserId(brokerId);
+	            	
+	            	id++;
+	            	Cloudlet cloudlet3 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	            	cloudlet3.setUserId(brokerId);
 
 	            	//add the cloudlets to the list
 	            	cloudletList.add(cloudlet1);
 	            	cloudletList.add(cloudlet2);
+	            	cloudletList.add(cloudlet3);
 
 	            	//submit cloudlet list to the broker
 	            	broker.submitCloudletList(cloudletList);
@@ -134,6 +146,7 @@ public class CloudSimExample2 {
 	            	// will submit the bound cloudlets only to the specific VM
 	            	broker.bindCloudletToVm(cloudlet1.getCloudletId(),vm1.getId());
 	            	broker.bindCloudletToVm(cloudlet2.getCloudletId(),vm2.getId());
+	            	broker.bindCloudletToVm(cloudlet3.getCloudletId(),vm3.getId());
 
 	            	// Sixth step: Starts the simulation
 	            	CloudSim.startSimulation();
@@ -160,6 +173,7 @@ public class CloudSimExample2 {
 	        // 1. We need to create a list to store
 	    	//    our machine
 	    	List<Host> hostList = new ArrayList<Host>();
+	    	List<Host> hostList1 = new ArrayList<Host>();
 
 	        // 2. A Machine contains one or more PEs or CPUs/Cores.
 	    	// In this example, it will have only one core.
@@ -185,7 +199,40 @@ public class CloudSimExample2 {
 	    				peList,
 	    				new VmSchedulerTimeShared(peList)
 	    			)
-	    		); // This is our machine
+	    		);// This is our machine
+	        hostId++;
+	        hostList.add(
+	    			new Host(
+	    				hostId,
+	    				new RamProvisionerSimple(ram),
+	    				new BwProvisionerSimple(bw),
+	    				storage,
+	    				peList,
+	    				new VmSchedulerTimeShared(peList)
+	    			)
+	    		);
+	        hostId++;
+	        hostList1.add(
+	    			new Host(
+	    				hostId,
+	    				new RamProvisionerSimple(ram),
+	    				new BwProvisionerSimple(bw),
+	    				storage,
+	    				peList,
+	    				new VmSchedulerTimeShared(peList)
+	    			)
+	    		);
+	        
+	        List<Rack> rackList = new ArrayList<Rack>();
+	        rackList.add(new Rack(0, hostList));
+	        rackList.add(new Rack(1, hostList1));
+	        
+	        
+	        List<Aisle> aisleList = new ArrayList<Aisle>();
+	        aisleList.add(new Aisle(0, rackList));
+	        
+	        List<Zone> zoneList = new ArrayList<Zone>();
+	        zoneList.add(new Zone(0, aisleList));
 
 
 	        // 5. Create a DatacenterCharacteristics object that stores the
@@ -203,7 +250,7 @@ public class CloudSimExample2 {
 	        LinkedList<Storage> storageList = new LinkedList<Storage>();	//we are not adding SAN devices by now
 
 	        DatacenterCharacteristics characteristics = new DatacenterCharacteristics(
-	                arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
+	                arch, os, vmm, zoneList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
 
 
 	        // 6. Finally, we need to create a PowerDatacenter object.
@@ -235,7 +282,8 @@ public class CloudSimExample2 {
 	     * Prints the Cloudlet objects
 	     * @param list  list of Cloudlets
 	     */
-	    private static void printCloudletList(List<Cloudlet> list) {
+	    @SuppressWarnings("deprecation")
+		private static void printCloudletList(List<Cloudlet> list) {
 	        int size = list.size();
 	        Cloudlet cloudlet;
 

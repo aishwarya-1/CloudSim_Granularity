@@ -230,10 +230,13 @@ public class DatacenterBroker extends SimEntity {
 			getVmsCreatedList().add(VmList.getById(getVmList(), vmId));
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": VM #", vmId,
 					" has been created in Datacenter #", datacenterId, 
-					", Zone #", VmList.getById(getVmsCreatedList(), vmId).getHost().getZone().getId(), 
-					" Host #", 	VmList.getById(getVmsCreatedList(), vmId).getHost().getId(), 
-					" L Host # ", (VmList.getById(getVmsCreatedList(), vmId).getHost().getZone()).getL_host(VmList.getById(getVmsCreatedList(), vmId).getHost().getId()),
-					" R Host # ", (VmList.getById(getVmsCreatedList(), vmId).getHost().getZone()).getR_host(VmList.getById(getVmsCreatedList(), vmId).getHost().getId()));
+					", Zone #", VmList.getById(getVmsCreatedList(), vmId).getHost().getRack().getAisle().getZone().getId(),
+					", Aisle #", VmList.getById(getVmsCreatedList(), vmId).getHost().getRack().getAisle().getId(),
+					", Rack #", VmList.getById(getVmsCreatedList(), vmId).getHost().getRack().getId(),
+					" Host #", 	VmList.getById(getVmsCreatedList(), vmId).getHost().getId()
+					//" L Host # ", (VmList.getById(getVmsCreatedList(), vmId).getHost().getZone()).getL_host(VmList.getById(getVmsCreatedList(), vmId).getHost().getId()),
+					//" R Host # ", (VmList.getById(getVmsCreatedList(), vmId).getHost().getZone()).getR_host(VmList.getById(getVmsCreatedList(), vmId).getHost().getId())
+					);
 		} else {
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
 					" failed in Datacenter #", datacenterId);

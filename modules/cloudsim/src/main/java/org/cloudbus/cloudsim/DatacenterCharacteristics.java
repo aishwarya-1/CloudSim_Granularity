@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.ZoneList;
+import org.cloudbus.cloudsim.lists.AisleList;
+import org.cloudbus.cloudsim.lists.RackList;
 import org.cloudbus.cloudsim.lists.HostList;
 import org.cloudbus.cloudsim.lists.PeList;
 
@@ -31,6 +33,7 @@ import org.cloudbus.cloudsim.lists.PeList;
  * giving the idea that the class can be used to describe characteristics of other resources.
  * However, the class was found being used only for datacenters.
  */
+@SuppressWarnings("unused")
 public class DatacenterCharacteristics {
 
 	/** The datacenter id -- setup when datacenter is created. */
@@ -569,7 +572,13 @@ public class DatacenterCharacteristics {
 	public <T extends Host> List<T> getHostList() {
 		List<Host> hostList = new ArrayList<Host>();
 		for (Zone zone : zoneList) {
-			hostList.addAll(zone.getHostList());
+			for(Aisle aisle : zone.getAisleList())
+			{
+				for(Rack rack : aisle.getRackList())
+				{
+					hostList.addAll(rack.getHostList());
+				}
+			}			
 		}
 		return (List<T>) hostList;
 	}

@@ -29,88 +29,21 @@ public class ZoneList {
 	}
 
 	/**
-	 * Gets the total number of Hosts for all Zones.
+	 * Gets the total number of Aisles for all Hosts.
 	 * 
 	 * @param <T> the generic type
 	 * @param zoneList the list of existing zones
-	 * @return total number of hosts for all Zones
+	 * @return total number of aisles for all Zones
 	 * @pre $none
 	 * @post $result >= 0
 	 */
 	public static <T extends Zone> int getNumberOfHosts(List<T> zoneList) {
-		int numberOfHosts = 0;
+		int numberOfAisles = 0;
 		for (T zone : zoneList) {
-			numberOfHosts += zone.getHostList().size();
+			numberOfAisles += zone.getAisleList().size();
 		}
-		return numberOfHosts;
+		return numberOfAisles;
 	}
-
-	/**
-	 * Gets the total number of <tt>FREE</tt> (non-busy) Hosts for all Zones.
-	 * 
-	 * @param <T> the generic type
-	 * @param zoneList the list of existing zones
-	 * @return total number of free Hosts
-	 * @pre $none
-	 * @post $result >= 0
-	 */
-
-//	public static <T extends Zone> int getNumberOfFreeHosts(List<T> zoneList) {
-//		int numberOfFreeHosts = 0;
-//		for (T zone : zoneList) {
-//			numberOfFreeHosts += HostList.getNumberOfFreeHosts(zone.getHostList());
-//		}
-//		return numberOfFreeHosts;
-//	}
-//
-//	/**
-//	 * Gets the total number of <tt>BUSY</tt> Hosts for all Zones.
-//	 * 
-//	 * @param <T> the generic type
-//	 * @param zoneList the list of existing zones
-//	 * @return total number of busy hosts
-//	 * @pre $none
-//	 * @post $result >= 0
-//	 */
-//	public static <T extends Zone> int getNumberOfBusyHosts(List<T> zoneList) {
-//		int numberOfBusyHosts = 0;
-//		for (T zone : zoneList) {
-//			numberOfBusyHosts += HostList.getNumberOfBusyHosts(zone.getHostList());
-//		}
-//		return numberOfBusyHosts;
-//	}
-//
-//	/**
-//	 * Gets the first zone with free hosts.
-//	 * 
-//	 * @param <T> the generic type
-//	 * @param zoneList the list of existing zones.
-//	 * @return a zone object or <tt>null</tt> if not found
-//	 * @pre $none
-//	 * @post $none
-//	 */
-//	public static <T extends Zone> T getZoneWithFreeHost(List<T> zoneList) {
-//		return getZoneWithFreeHost(zoneList, 1);
-//	}
-//
-//	/**
-//	 * Gets the first Zone with a specified number of free Hosts.
-//	 * 
-//	 * @param <T> the generic type
-//	 * @param zoneList the list of existing zones
-//	 * @param hostNumber the host number
-//	 * @return a Zone object or <tt>null</tt> if not found
-//	 * @pre $none
-//	 * @post $none
-//	 */
-//	public static <T extends Zone> T getZoneWithFreeHost(List<T> zoneList, int hostNumber) {
-//		for (T zone : zoneList) {
-//			if (ZoneList.getNumberOfFreeHosts(zone.getHostList()) >= hostNumber) {
-//				return zone;
-//			}
-//		}
-//		return null;
-//	}
 
 	/**
 	 * Sets the status of a particular Host on a given Zone.

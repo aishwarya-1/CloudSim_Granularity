@@ -148,11 +148,6 @@ public class HostList {
 	}
 
 	public static <T extends Host> int size(List<T> hostList) {
-//		int size = 0;
-//		for (T host : hostList) {
-//			size++;
-//			}
-//		}
 		return hostList.size();
 	}
 	

@@ -55,8 +55,8 @@ public class Host {
 	/** The VMs migrating in. */
 	private final List<Vm> vmsMigratingIn = new ArrayList<Vm>();
 
-	/** The zone where the host is placed. */
-	private Zone zone;
+	/** The rack where the host is placed. */
+	private Rack rack;
 	
 //	/** The host on the left. */
 //	private Host l_host;
@@ -79,7 +79,6 @@ public class Host {
 			RamProvisioner ramProvisioner,
 			BwProvisioner bwProvisioner,
 			long storage,
-			//Zone zone,
 			List<? extends Pe> peList,
 			VmScheduler vmScheduler) {
 		setId(id);
@@ -87,7 +86,6 @@ public class Host {
 		setBwProvisioner(bwProvisioner);
 		setStorage(storage);
 		setVmScheduler(vmScheduler);
-		//setZone(zone);
 		setPeList(peList);
 		setFailed(false);
 	}
@@ -620,21 +618,21 @@ public class Host {
 	}
 
 	/**
-	 * Gets the zone of the host.
+	 * Gets the rack of the host.
 	 * 
-	 * @return the zone where the host runs
+	 * @return the rack where the host runs
 	 */
-	public Zone getZone() {
-		return zone;
+	public Rack getRack() {
+		return rack;
 	}
 
 	/**
-	 * Sets the zone of the host.
+	 * Sets the rack of the host.
 	 * 
-	 * @param zone the data center from this host
+	 * @param rack the data center from this host
 	 */
-	public void setZone(Zone zone) {
-		this.zone = zone;
+	public void setRack(Rack rack) {
+		this.rack = rack;
 	}
 
 }
