@@ -144,9 +144,9 @@ public class CloudSimExample2 {
 
 	            	//bind the cloudlets to the vms. This way, the broker
 	            	// will submit the bound cloudlets only to the specific VM
-	            	broker.bindCloudletToVm(cloudlet1.getCloudletId(),vm1.getId());
-	            	broker.bindCloudletToVm(cloudlet2.getCloudletId(),vm2.getId());
-	            	broker.bindCloudletToVm(cloudlet3.getCloudletId(),vm3.getId());
+	            	//broker.bindCloudletToVm(cloudlet1.getCloudletId(),vm1.getId());
+	            	//broker.bindCloudletToVm(cloudlet2.getCloudletId(),vm2.getId());
+	            	//broker.bindCloudletToVm(cloudlet3.getCloudletId(),vm3.getId());
 
 	            	// Sixth step: Starts the simulation
 	            	CloudSim.startSimulation();
@@ -256,7 +256,7 @@ public class CloudSimExample2 {
 	        // 6. Finally, we need to create a PowerDatacenter object.
 	        Datacenter datacenter = null;
 	        try {
-	            datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(hostList), storageList, 0);
+	            datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(characteristics.getHostList()), storageList, 0);
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
