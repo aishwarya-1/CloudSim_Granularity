@@ -142,6 +142,38 @@ public class Helper {
 		}
 		return broker;
 	}
+	
+	public static List<Zone> createZoneList(List<Aisle> aisles, int zoneNumber) {
+		List<Zone> zones = new ArrayList<Zone>();
+		for (int i = 0; i < zoneNumber; i++) {
+			zones.add(new Zone(
+					i,
+					aisles)
+					);
+		}
+		return zones;
+	}
+	
+	public static List<Aisle> createAisleList(List<Rack> racks, int aisleNumber) {
+		List<Aisle> aisles = new ArrayList<Aisle>();
+		for (int i = 0; i < aisleNumber; i++) {
+			aisles.add(new Aisle(
+					i,
+					racks));
+		}
+		return aisles;
+	}
+
+	public static List<Rack> createRackList(List<PowerHost> hosts, int rackNumber) {
+		List<Rack> racks = new ArrayList<Rack>();
+		for (int i = 0; i < rackNumber; i++) {
+			racks.add(new Rack(
+					i,
+					hosts));
+		}
+		return racks;
+	}
+
 
 	/**
 	 * Creates the datacenter.
@@ -157,24 +189,11 @@ public class Helper {
 	 * @throws Exception the exception
 	 */
 	public static Datacenter createDatacenter(
-			String name
+			String name,
 			//Class<? extends Datacenter> datacenterClass,
-			//List<PowerHost> hostList,
+			List<Zone> zoneList
 			//VmAllocationPolicy vmAllocationPolicy
 			) throws Exception {
-		
-		List<PowerHost> hostList = createHostList(5);
-		
-		List<Rack> rackList = new ArrayList<Rack>();
-        rackList.add(new Rack(0, hostList));        
-        
-        List<Aisle> aisleList = new ArrayList<Aisle>();
-        aisleList.add(new Aisle(0, rackList));
-        
-        List<Zone> zoneList = new ArrayList<Zone>();
-        zoneList.add(new Zone(0, aisleList));
-        
-        
         
 		String arch = "x86"; // system architecture
 		String os = "Linux"; // operating system
@@ -198,7 +217,7 @@ public class Helper {
 
 		Datacenter datacenter = null;
 		try {
-			datacenter = datacenter.getConstructor(
+			datacenter = Datacenter.getConstructor(
 					String.class,
 					DatacenterCharacteristics.class,
 					VmAllocationPolicy.class,
@@ -824,7 +843,18 @@ public class Helper {
 	            	// Second step: Create Datacenters
 	            	//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
 	            	@SuppressWarnings("unused")
-					Datacenter datacenter0 = createDatacenter("Datacenter_0");
+	        		List<PowerHost> hostList = createHostList(5);
+	        		
+	        		List<Rack> rackList = createRackList(hostList, 1);        
+	                
+	                List<Aisle> aisleList = createAisleList(rackList, 1);
+	                
+	                List<Zone> zoneList = createZoneList(aisleList, 1); 
+	                
+					Datacenter datacenter0 = createDatacenter("Datacenter_0",
+																//Datacenter,
+																zoneList
+																);
 
 	            	//Third step: Create Broker
 	            	DatacenterBroker broker = createBroker();
