@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.HashMap;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
@@ -31,6 +32,7 @@ import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.Zone;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.lists.VmList;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -52,7 +54,8 @@ public class CloudSimExample3 {
 
 	/** The vmlist. */
 	private static List<Vm> vmlist;
-
+	
+	public static VmAllocationPolicySimple vmAllocater;
 	/**
 	 * Creates main() to run this example
 	 */
@@ -138,14 +141,18 @@ public class CloudSimExample3 {
 
 			// Sixth step: Starts the simulation
 			CloudSim.startSimulation();
+			
+			//printCloudletList(newList, vmAllocater, brokerId);
 
 
 			// Final step: Print results when simulation is over
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
+			
+			printCloudletList(newList, vmAllocater, brokerId);
 
 			CloudSim.stopSimulation();
 
-        	printCloudletList(newList);
+        	//printCloudletList(newList, vmAllocater, brokerId);
 
 			Log.printLine("CloudSimExample3 finished!");
 		}
@@ -232,7 +239,7 @@ public class CloudSimExample3 {
 		// 6. Finally, we need to create a PowerDatacenter object.
 		Datacenter datacenter = null;
 		try {
-			VmAllocationPolicySimple vmAllocater = new VmAllocationPolicySimple(characteristics.getHostList());
+			vmAllocater = new VmAllocationPolicySimple(characteristics.getHostList());
 			datacenter = new Datacenter(name, characteristics, vmAllocater, storageList, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -259,7 +266,7 @@ public class CloudSimExample3 {
 	 * Prints the Cloudlet objects
 	 * @param list  list of Cloudlets
 	 */
-	private static void printCloudletList(List<Cloudlet> list, VmAllocationPolicySimple vmAllocater) {
+	private static void printCloudletList(List<Cloudlet> list, VmAllocationPolicySimple vmAllocater, int brokerId) {
 		int size = list.size();
 		Cloudlet cloudlet;
 
@@ -278,7 +285,7 @@ public class CloudSimExample3 {
 				Log.print("SUCCESS");
 
 				Log.printLine( indent + indent + cloudlet.getResourceId()
-							+ indent + indent +  vmAllocater(cloudlet.getVmId(), getUserId)
+							//+ indent + indent +  (vmAllocater.getHost(cloudlet.getVmId(), brokerId)).getId()
 							+ indent + indent + indent + cloudlet.getVmId() 
 							+ indent + indent + dft.format(cloudlet.getActualCPUTime())
 							+ indent + indent + dft.format(cloudlet.getExecStartTime())

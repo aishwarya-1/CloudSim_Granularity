@@ -6,14 +6,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.cloudbus.cloudsim.Aisle;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerDynamicWorkload;
+import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
@@ -22,11 +25,17 @@ import org.cloudbus.cloudsim.HostDynamicWorkload;
 import org.cloudbus.cloudsim.HostStateHistoryEntry;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
+import org.cloudbus.cloudsim.Rack;
 import org.cloudbus.cloudsim.Storage;
+import org.cloudbus.cloudsim.UtilizationModel;
+import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
+import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.VmStateHistoryEntry;
+import org.cloudbus.cloudsim.Zone;
+import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.power.PowerDatacenter;
 import org.cloudbus.cloudsim.power.PowerDatacenterBroker;
 import org.cloudbus.cloudsim.power.PowerHost;
@@ -52,6 +61,14 @@ import org.cloudbus.cloudsim.util.MathUtil;
  * @author Anton Beloglazov
  */
 public class Helper {
+	
+	private static final Class<? extends Datacenter> Datacenter = null;
+
+	/** The cloudlet list. */
+	private static List<Cloudlet> cloudletList;
+
+	/** The vmlist. */
+	private static List<Vm> vmlist;
 
 	/**
 	 * Creates the vm list.
@@ -140,10 +157,25 @@ public class Helper {
 	 * @throws Exception the exception
 	 */
 	public static Datacenter createDatacenter(
-			String name,
-			Class<? extends Datacenter> datacenterClass,
-			List<PowerHost> hostList,
-			VmAllocationPolicy vmAllocationPolicy) throws Exception {
+			String name
+			//Class<? extends Datacenter> datacenterClass,
+			//List<PowerHost> hostList,
+			//VmAllocationPolicy vmAllocationPolicy
+			) throws Exception {
+		
+		List<PowerHost> hostList = createHostList(5);
+		
+		List<Rack> rackList = new ArrayList<Rack>();
+        rackList.add(new Rack(0, hostList));        
+        
+        List<Aisle> aisleList = new ArrayList<Aisle>();
+        aisleList.add(new Aisle(0, rackList));
+        
+        List<Zone> zoneList = new ArrayList<Zone>();
+        zoneList.add(new Zone(0, aisleList));
+        
+        
+        
 		String arch = "x86"; // system architecture
 		String os = "Linux"; // operating system
 		String vmm = "Xen";
@@ -157,7 +189,7 @@ public class Helper {
 				arch,
 				os,
 				vmm,
-				hostList,
+				zoneList,
 				time_zone,
 				cost,
 				costPerMem,
@@ -166,7 +198,7 @@ public class Helper {
 
 		Datacenter datacenter = null;
 		try {
-			datacenter = datacenterClass.getConstructor(
+			datacenter = datacenter.getConstructor(
 					String.class,
 					DatacenterCharacteristics.class,
 					VmAllocationPolicy.class,
@@ -174,7 +206,7 @@ public class Helper {
 					Double.TYPE).newInstance(
 					name,
 					characteristics,
-					vmAllocationPolicy,
+					new VmAllocationPolicySimple(characteristics.getHostList()),
 					new LinkedList<Storage>(),
 					Constants.SCHEDULING_INTERVAL);
 		} catch (Exception e) {
@@ -775,5 +807,91 @@ public class Helper {
 			Log.printLine();
 		}
 	}
+	public static void main(String[] args) {
+
+		Log.printLine("Starting CloudSimExample2...");
+
+	        try {
+	        	// First step: Initialize the CloudSim package. It should be called
+	            	// before creating any entities.
+	            	int num_user = 1;   // number of cloud users
+	            	Calendar calendar = Calendar.getInstance();
+	            	boolean trace_flag = false;  // mean trace events
+
+	            	// Initialize the CloudSim library
+	            	CloudSim.init(num_user, calendar, trace_flag);
+
+	            	// Second step: Create Datacenters
+	            	//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
+	            	@SuppressWarnings("unused")
+					Datacenter datacenter0 = createDatacenter("Datacenter_0");
+
+	            	//Third step: Create Broker
+	            	DatacenterBroker broker = createBroker();
+	            	int brokerId = broker.getId();
+
+	            	//Fourth step: Create one virtual machine
+	            	vmlist = new ArrayList<Vm>();
+	            	vmlist = createVmList(1, 3);
+
+	            	//submit vm list to the broker
+	            	broker.submitVmList(vmlist);
+
+
+	            	//Fifth step: Create two Cloudlets
+	            	cloudletList = new ArrayList<Cloudlet>();
+
+	            	//Cloudlet properties
+	            	int id = 0;
+	            	int pesNumber=1;
+	            	long length = 250000;
+	            	long fileSize = 300;
+	            	long outputSize = 300;
+	            	UtilizationModel utilizationModel = new UtilizationModelFull();
+
+	            	Cloudlet cloudlet1 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	            	cloudlet1.setUserId(brokerId);
+
+	            	id++;
+	            	Cloudlet cloudlet2 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	            	cloudlet2.setUserId(brokerId);
+	            	
+	            	id++;
+	            	Cloudlet cloudlet3 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	            	cloudlet3.setUserId(brokerId);
+
+	            	//add the cloudlets to the list
+	            	cloudletList.add(cloudlet1);
+	            	cloudletList.add(cloudlet2);
+	            	cloudletList.add(cloudlet3);
+
+	            	//submit cloudlet list to the broker
+	            	broker.submitCloudletList(cloudletList);
+
+
+	            	//bind the cloudlets to the vms. This way, the broker
+	            	// will submit the bound cloudlets only to the specific VM
+	            	//broker.bindCloudletToVm(cloudlet1.getCloudletId(),vm1.getId());
+	            	//broker.bindCloudletToVm(cloudlet2.getCloudletId(),vm2.getId());
+	            	//broker.bindCloudletToVm(cloudlet3.getCloudletId(),vm3.getId());
+
+	            	// Sixth step: Starts the simulation
+	            	CloudSim.startSimulation();
+
+
+	            	// Final step: Print results when simulation is over
+	            	List<Cloudlet> newList = broker.getCloudletReceivedList();
+
+	            	CloudSim.stopSimulation();
+
+	            	printCloudletList(newList);
+
+	            	Log.printLine("CloudSimExample2 finished!");
+	        }
+	        catch (Exception e) {
+	            e.printStackTrace();
+	            Log.printLine("The simulation has been terminated due to an unexpected error");
+	        }
+	    }
 
 }

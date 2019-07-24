@@ -214,7 +214,7 @@ public class CloudSimExample2 {
 	        hostId++;
 	        hostList1.add(
 	    			new Host(
-	    				hostId,
+	    				0,
 	    				new RamProvisionerSimple(ram),
 	    				new BwProvisionerSimple(bw),
 	    				storage,

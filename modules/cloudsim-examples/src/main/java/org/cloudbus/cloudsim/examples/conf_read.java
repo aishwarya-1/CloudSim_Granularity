@@ -81,6 +81,7 @@ public class conf_read {
         {
             aisleList.add(new Aisle(i, rackList));
         }
+        return aisleList;
 	}
 	private static Zone createZoneList(String name) {
         List<Zone> zoneList = new ArrayList<Zone>();
