@@ -184,9 +184,17 @@ public class TimeSharedProblemDetector {
 			)
 		); // This is our machine
 		
+		int rackId = 0;
+		List<Rack> rackList = new ArrayList<Rack>();
+		rackList.add(new Rack(rackId, hostList));
+		
+		int aisleId = 0;
+		List<Aisle> aisleList = new ArrayList<Aisle>();
+		aisleList.add(new Aisle(aisleId, rackList));
+		
 		int zoneId = 0;
 		List<Zone> zoneList = new ArrayList<Zone>();
-		zoneList.add(new Zone(zoneId, hostList));
+		zoneList.add(new Zone(zoneId, aisleList));
 
 		// 5. Create a DatacenterCharacteristics object that stores the
 		// properties of a data center: architecture, OS, list of
