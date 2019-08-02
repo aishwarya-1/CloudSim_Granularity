@@ -5,9 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Defines the resource utilization model based on 
- * a <a href="https://www.planet-lab.org">PlanetLab</a>
- * datacenter trace file.
+ * The Class UtilizationModelPlanetLab.
  */
 public class UtilizationModelPlanetLabInMemory implements UtilizationModel {
 	
@@ -18,10 +16,9 @@ public class UtilizationModelPlanetLabInMemory implements UtilizationModel {
 	private final double[] data; 
 	
 	/**
-	 * Instantiates a new PlanetLab resource utilization model from a trace file.
+	 * Instantiates a new utilization model PlanetLab.
 	 * 
-	 * @param inputPath The path of a PlanetLab datacenter trace.
-         * @param schedulingInterval
+	 * @param inputPath the input path
 	 * @throws NumberFormatException the number format exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
@@ -31,19 +28,21 @@ public class UtilizationModelPlanetLabInMemory implements UtilizationModel {
 		data = new double[289];
 		setSchedulingInterval(schedulingInterval);
 		BufferedReader input = new BufferedReader(new FileReader(inputPath));
-		int n = data.length;
+		int n = 10;
 		for (int i = 0; i < n - 1; i++) {
-			data[i] = Integer.valueOf(input.readLine()) / 100.0;
+			String[] workloadvalues = new String[3];
+			workloadvalues = (input.readLine()).split(" ",-1);
+			data[i] = Integer.valueOf(workloadvalues[0]) / 100.0;
 		}
-		data[n - 1] = data[n - 2];
+		data[n - 1] = data[n - 2]; 
+	
 		input.close();
 	}
 	
 	/**
-	 * Instantiates a new PlanetLab resource utilization model with variable data samples
-         * from a trace file.
+	 * Instantiates a new utilization model PlanetLab with variable data samples.
 	 * 
-	 * @param inputPath The path of a PlanetLab datacenter trace.
+	 * @param inputPath the input path
 	 * @param dataSamples number of samples in the file
 	 * @throws NumberFormatException the number format exception
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -62,6 +61,10 @@ public class UtilizationModelPlanetLabInMemory implements UtilizationModel {
 		input.close();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see cloudsim.power.UtilizationModel#getUtilization(double)
+	 */
 	@Override
 	public double getUtilization(double time) {
 		if (time % getSchedulingInterval() == 0) {
@@ -93,9 +96,5 @@ public class UtilizationModelPlanetLabInMemory implements UtilizationModel {
 	 */
 	public double getSchedulingInterval() {
 		return schedulingInterval;
-	}
-	
-	public double[] getData(){
-		return data;
 	}
 }

@@ -76,7 +76,6 @@ public class Rack {
 	protected <T extends Host> void setHostList(List<? extends Host> hostList) {
 		this.hostList = hostList;
 	}
-	
 	public void setHost() {
 		for (Host host : getHostList()) {
 			host.setRack(this);
@@ -101,5 +100,49 @@ public class Rack {
 	public void setAisle(Aisle aisle) {
 		this.aisle = aisle;
 	}
+	
+	/**
+	 * @param <T>
+	 * @return 
+	 * @return the l_host
+	 */
+	public int getL_host(int hostId) {
+		if(hostId>0) {
+			return (HostList.getById(getHostList(), hostId-1)).getId();
+		}
+		else{
+			return -1;
+		}
+	}
+	
+	/**
+	 * @param <T>
+	 * @return 
+	 * @return the l_host
+	 */
+	public int getR_host(int hostId) {
+		if(hostId<HostList.size(getHostList())-1) {
+			return (HostList.getById(getHostList(), hostId+1)).getId();
+		}
+		else{
+			return -1;
+		}
+	}
+	
+	/**
+	 * 
+	 * @return the address of the host.
+	 */
+	
+	public String getAddress() {
+		int rackid = getId();
+		int aisleid = getAisle().getId();
+		int zoneid = getAisle().getZone().getId();
+		int dcid = getAisle().getZone().getDatacenter().getId();
+		String address = Integer.toString(dcid)+"_"+Integer.toString(zoneid)+"_"+Integer.toString(aisleid)+"_"+Integer.toString(rackid);
+//		Log.printLine(address);
+		return address;
+	}
+
 
 }

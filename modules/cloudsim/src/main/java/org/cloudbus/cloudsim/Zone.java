@@ -127,5 +127,18 @@ public class Zone {
 	public void setDatacenter(Datacenter datacenter) {
 		this.datacenter = datacenter;
 	}
+	
+	/**
+	 * 
+	 * @return the address of the host.
+	 */
+	
+	public String getAddress() {
+		int zoneid = getId();
+		int dcid = getDatacenter().getId();
+		String address = Integer.toString(dcid)+"_"+Integer.toString(zoneid);
+//		Log.printLine(address);
+		return address;
+	}
 
 }

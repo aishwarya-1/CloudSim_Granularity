@@ -100,5 +100,20 @@ public class Aisle {
 	public void setZone(Zone zone) {
 		this.zone = zone;
 	}
+	
+	/**
+	 * 
+	 * @return the address of the host.
+	 */
+	
+	public String getAddress() {
+		int aisleid = getId();
+		int zoneid = getZone().getId();
+		int dcid = getZone().getDatacenter().getId();
+		String address = Integer.toString(dcid)+"_"+Integer.toString(zoneid)+"_"+Integer.toString(aisleid);
+//		Log.printLine(address);
+		return address;
+	}
+
 
 }
