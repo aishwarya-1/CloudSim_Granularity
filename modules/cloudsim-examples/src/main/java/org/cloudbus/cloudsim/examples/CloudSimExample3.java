@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.HashMap;
 
+import org.cloudbus.cloudsim.Aisle;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.Datacenter;
@@ -24,6 +25,7 @@ import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
+import org.cloudbus.cloudsim.Rack;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
@@ -213,10 +215,24 @@ public class CloudSimExample3 {
     				new VmSchedulerTimeShared(peList2)
     			)
     		); // This is our second machine
+		
+		List<Rack> rackList = new ArrayList<Rack>();
+        rackList.add(new Rack(0, hostList1));
+        //rackList.add(new Rack(1, hostList2));   
+        
+        List<Rack> rackList1 = new ArrayList<Rack>();
+        rackList1.add(new Rack(2, hostList2));
+        
+        List<Aisle> aisleList = new ArrayList<Aisle>();
+        aisleList.add(new Aisle(0, rackList));
+        aisleList.add(new Aisle(1, rackList1));
+        
+        List<Zone> zoneList = new ArrayList<Zone>();
+        zoneList.add(new Zone(0, aisleList));
 
-		List<Zone> zoneList = new ArrayList<Zone>();
-		zoneList.add(new Zone(0, hostList1));
-		zoneList.add(new Zone(1, hostList2));
+		//List<Zone> zoneList = new ArrayList<Zone>();
+		zoneList.add(new Zone(0, aisleList));
+
 		
 
 		// 5. Create a DatacenterCharacteristics object that stores the

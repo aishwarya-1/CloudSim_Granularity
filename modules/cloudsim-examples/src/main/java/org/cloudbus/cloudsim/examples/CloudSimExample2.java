@@ -34,6 +34,7 @@ import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.Zone;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.lists.VmList;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -102,10 +103,22 @@ public class CloudSimExample2 {
 	            	vmid++;
 	            	Vm vm3 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
+	            	vmid++;
+	            	Vm vm4 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+
+//	            	vmid++;
+//	            	Vm vm5 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+//	            	
+//	            	vmid++;
+//	            	Vm vm6 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+
 	            	//add the VMs to the vmList
 	            	vmlist.add(vm1);
 	            	vmlist.add(vm2);
 	            	vmlist.add(vm3);
+	            	vmlist.add(vm4);
+//	            	vmlist.add(vm5);
+//	            	vmlist.add(vm6);
 
 	            	//submit vm list to the broker
 	            	broker.submitVmList(vmlist);
@@ -132,11 +145,41 @@ public class CloudSimExample2 {
 	            	id++;
 	            	Cloudlet cloudlet3 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 	            	cloudlet3.setUserId(brokerId);
+	            	
+	            	id++;
+	            	Cloudlet cloudlet4 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	            	cloudlet4.setUserId(brokerId);
+	            	
+	            	id++;
+	            	Cloudlet cloudlet5 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	            	cloudlet5.setUserId(brokerId);
+	            	
+	            	id++;
+	            	Cloudlet cloudlet6 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	            	cloudlet6.setUserId(brokerId);
+	            	
+	            	id++;
+	            	Cloudlet cloudlet7 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	            	cloudlet7.setUserId(brokerId);
+	            	
+	            	id++;
+	            	Cloudlet cloudlet8 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	            	cloudlet8.setUserId(brokerId);
+	            	
+	            	id++;
+	            	Cloudlet cloudlet9 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+	            	cloudlet9.setUserId(brokerId);
 
 	            	//add the cloudlets to the list
 	            	cloudletList.add(cloudlet1);
 	            	cloudletList.add(cloudlet2);
 	            	cloudletList.add(cloudlet3);
+	            	cloudletList.add(cloudlet4);
+	            	cloudletList.add(cloudlet5);
+	            	cloudletList.add(cloudlet6);
+	            	cloudletList.add(cloudlet7);
+	            	cloudletList.add(cloudlet8);
+	            	cloudletList.add(cloudlet9);
 
 	            	//submit cloudlet list to the broker
 	            	broker.submitCloudletList(cloudletList);
@@ -154,6 +197,12 @@ public class CloudSimExample2 {
 
 	            	// Final step: Print results when simulation is over
 	            	List<Cloudlet> newList = broker.getCloudletReceivedList();
+	            	List<Cloudlet> cloudletlist = broker.getCloudletList();
+	            	for (Cloudlet cloudlet : cloudletlist) {
+	            		int cloudlet_vmid = cloudlet.getVmId();
+	            		Log.printLine(cloudlet_vmid);
+	            		Log.printLine("imple"+VmList.getById(broker.getVmsCreatedList(), cloudlet_vmid).getHost().getId());
+	            	}
 
 	            	CloudSim.stopSimulation();
 
@@ -174,6 +223,7 @@ public class CloudSimExample2 {
 	    	//    our machine
 	    	List<Host> hostList = new ArrayList<Host>();
 	    	List<Host> hostList1 = new ArrayList<Host>();
+	    	List<Host> hostList2 = new ArrayList<Host>();
 
 	        // 2. A Machine contains one or more PEs or CPUs/Cores.
 	    	// In this example, it will have only one core.
@@ -212,6 +262,17 @@ public class CloudSimExample2 {
 	    			)
 	    		);
 	        hostId++;
+	        hostList.add(
+	    			new Host(
+	    				hostId,
+	    				new RamProvisionerSimple(ram),
+	    				new BwProvisionerSimple(bw),
+	    				storage,
+	    				peList,
+	    				new VmSchedulerTimeShared(peList)
+	    			)
+	    		);
+	        hostId++;
 	        hostList1.add(
 	    			new Host(
 	    				0,
@@ -222,14 +283,39 @@ public class CloudSimExample2 {
 	    				new VmSchedulerTimeShared(peList)
 	    			)
 	    		);
+	        hostId++;
+	        hostList2.add(
+	    			new Host(
+	    				hostId,
+	    				new RamProvisionerSimple(ram),
+	    				new BwProvisionerSimple(bw),
+	    				storage,
+	    				peList,
+	    				new VmSchedulerTimeShared(peList)
+	    			)
+	    		);
+	        hostId++;
+	        hostList2.add(
+	    			new Host(
+	    				hostId,
+	    				new RamProvisionerSimple(ram),
+	    				new BwProvisionerSimple(bw),
+	    				storage,
+	    				peList,
+	    				new VmSchedulerTimeShared(peList)
+	    			)
+	    		);
 	        
 	        List<Rack> rackList = new ArrayList<Rack>();
 	        rackList.add(new Rack(0, hostList));
-	        rackList.add(new Rack(1, hostList1));
+	        rackList.add(new Rack(1, hostList1));   
 	        
+	        List<Rack> rackList1 = new ArrayList<Rack>();
+	        rackList1.add(new Rack(2, hostList2));
 	        
 	        List<Aisle> aisleList = new ArrayList<Aisle>();
 	        aisleList.add(new Aisle(0, rackList));
+	        aisleList.add(new Aisle(1, rackList1));
 	        
 	        List<Zone> zoneList = new ArrayList<Zone>();
 	        zoneList.add(new Zone(0, aisleList));

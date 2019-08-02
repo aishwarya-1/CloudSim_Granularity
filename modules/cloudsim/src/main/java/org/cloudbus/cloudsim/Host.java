@@ -634,5 +634,33 @@ public class Host {
 	public void setRack(Rack rack) {
 		this.rack = rack;
 	}
-
+	
+	/**
+	 * Gets the characteristics of the host.
+	 */
+	public List<String> getCharacteristics() {
+		
+		List<String> c=new ArrayList<String>();  
+		c.add(Integer.toString(getId()));
+		c.add(Long.toString(getBw()));
+		c.add(Long.toString(getRam()));
+		c.add(Long.toString(getStorage()));
+		return c;
+	}
+	
+	/**
+	 * 
+	 * @return the address of the host.
+	 */
+	
+	public String getAddress() {
+		int hostid = getId();
+		int rackid = getRack().getId();
+		int aisleid = getRack().getAisle().getId();
+		int zoneid = getRack().getAisle().getZone().getId();
+		int dcid = getRack().getAisle().getZone().getDatacenter().getId();
+		String address = Integer.toString(dcid)+"_"+Integer.toString(zoneid)+"_"+Integer.toString(aisleid)+"_"+Integer.toString(rackid)+"_"+Integer.toString(hostid);
+//		Log.printLine(address);
+		return address;
+	}
 }

@@ -25,6 +25,7 @@ public final class Consts {
     public static final int DAY = 24 * HOUR;
     /** One week time in seconds. */
     public static final int WEEK = 24 * HOUR;
+    public static final double SCHEDULING_INTERVAL = 300;
 
     // ================== OS constants ==================
     /** Constant for *nix Operating Systems. */
