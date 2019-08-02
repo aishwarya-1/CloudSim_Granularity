@@ -221,7 +221,7 @@ public class CloudSimExample3 {
         //rackList.add(new Rack(1, hostList2));   
         
         List<Rack> rackList1 = new ArrayList<Rack>();
-        rackList1.add(new Rack(2, hostList2));
+        rackList1.add(new Rack(1, hostList2));
         
         List<Aisle> aisleList = new ArrayList<Aisle>();
         aisleList.add(new Aisle(0, rackList));
