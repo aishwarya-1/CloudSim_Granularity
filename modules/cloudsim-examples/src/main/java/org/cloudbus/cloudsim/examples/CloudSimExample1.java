@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.cloudbus.cloudsim.Aisle;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.Datacenter;
@@ -24,6 +25,7 @@ import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
+import org.cloudbus.cloudsim.Rack;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
@@ -265,8 +267,17 @@ public class CloudSimExample1 {
 				)
 			);// This is our machine
 		
-		List<Zone> zoneList = new ArrayList<Zone>();
-		zoneList.add(new Zone(0, hostList));
+		List<Rack> rackList = new ArrayList<Rack>();
+        rackList.add(new Rack(0, hostList));
+  
+       
+        List<Aisle> aisleList = new ArrayList<Aisle>();
+        aisleList.add(new Aisle(0, rackList));
+
+        
+        List<Zone> zoneList = new ArrayList<Zone>();
+        zoneList.add(new Zone(0, aisleList));
+
 
 		// 5. Create a DatacenterCharacteristics object that stores the
 		// properties of a data center: architecture, OS, list of
