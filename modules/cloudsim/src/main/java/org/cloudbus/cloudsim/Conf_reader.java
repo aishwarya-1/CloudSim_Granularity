@@ -96,6 +96,10 @@ public class Conf_reader {
         }
         return zoneList;
 	}
+	private void readPe()
+	{
+		
+	}
 	
 	private static Datacenter createDatacenter(double cost, double costPerMem, double costPerStorage, double costPerBw, List<Zone> zoneList)
 	{
