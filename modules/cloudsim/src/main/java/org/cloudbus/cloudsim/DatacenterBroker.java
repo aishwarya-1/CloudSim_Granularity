@@ -374,13 +374,13 @@ public class DatacenterBroker extends SimEntity {
 				Log.printLine("Vm "+ i + " has " + count_vmid[i]+ " cloudlets");
 			}
 			
-			for (int i = 0; i<hostid.length; i++) {
-				count_hostid[hostid[i]]++;
-			}
+//			for (int i = 0; i<hostid.length; i++) {
+//				count_hostid[hostid[i]]++;
+//			}
 			
-			for(int i= 0;i<count_hostid.length;i++) {
-				Log.printLine("Host "+ i + " has " + count_hostid[i]+ " cloudlets");
-			}
+//			for(int i= 0;i<count_hostid.length;i++) {
+//				Log.printLine("Host "+ i + " has " + count_hostid[i]+ " cloudlets");
+//			}
 			
 			for (int i = 0; i<rackid.length; i++) {
 				count_rackid[rackid[i]]++;

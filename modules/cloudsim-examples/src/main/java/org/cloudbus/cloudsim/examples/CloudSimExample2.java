@@ -112,19 +112,19 @@ public class CloudSimExample2 {
 	            	vmid++;
 	            	Vm vm4 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
-//	            	vmid++;
-//	            	Vm vm5 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
-//	            	
-//	            	vmid++;
-//	            	Vm vm6 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+	            	vmid++;
+	            	Vm vm5 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+	            	
+	            	vmid++;
+	            	Vm vm6 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
 	            	//add the VMs to the vmList
 	            	vmlist.add(vm1);
 	            	vmlist.add(vm2);
 	            	vmlist.add(vm3);
 	            	vmlist.add(vm4);
-//	            	vmlist.add(vm5);
-//	            	vmlist.add(vm6);
+	            	vmlist.add(vm5);
+	            	vmlist.add(vm6);
 
 	            	//submit vm list to the broker
 	            	broker.submitVmList(vmlist);

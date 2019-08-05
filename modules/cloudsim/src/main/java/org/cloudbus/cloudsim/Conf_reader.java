@@ -1,43 +1,23 @@
 package org.cloudbus.cloudsim;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Properties;
 
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.cloudbus.cloudsim.Reader;
 import org.cloudbus.cloudsim.Aisle;
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.Datacenter;
-import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Rack;
 import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.UtilizationModel;
-import org.cloudbus.cloudsim.UtilizationModelFull;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.Zone;
-import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -58,12 +38,12 @@ public class Conf_reader {
     	return peList;
 	}
 	
-	private static List<Host> createHostList(int id, int num_hosts, List<List<Pe>> pe2D, List<Integer> rams, List<Integer> bws, List<Long> storages) {
+	private static List<Host> createHostList(int id, int num_hosts, List<List<Pe>> pe2D, List<Integer> rams, List<Integer> bws, List<Long> storages) 
+	{
         List<Host> hostList = new ArrayList<Host>();
         for(int i = id; i<num_hosts; i++)
         {
         	//4. Create Host with its id and list of PEs and add them to the list of machines
-
 	        hostList.add(
 	    			new Host(
 	    				i,
@@ -73,40 +53,36 @@ public class Conf_reader {
 	    				pe2D.get(i-id),
 	    				new VmSchedulerTimeShared(pe2D.get(i-id))
 	    			)
-	    		);// This is our machine
+	    		);
         }
         return hostList;
 	}
 	
-	private static List<Rack> createRackList(int num_racks, List<List<Host>> host2D) {
+	private static List<Rack> createRackList(int rackid, int num_racks, List<List<Host>> host2D) {
         List<Rack> rackList = new ArrayList<Rack>();
         for(int i = 0; i<num_racks; i++)
         {
-            rackList.add(new Rack(i, host2D.get(i)));
+            rackList.add(new Rack(rackid+i, host2D.get(i)));
         }
         return rackList;
 	}
 	
-	private static List<Aisle> createAisleList(int num_aisles, List<List<Rack>> racks2D) {
+	private static List<Aisle> createAisleList(int aisleid, int num_aisles, List<List<Rack>> racks2D) {
         List<Aisle> aisleList = new ArrayList<Aisle>();
         for(int i = 0; i<num_aisles; i++)
         {
-            aisleList.add(new Aisle(i, racks2D.get(i)));
+            aisleList.add(new Aisle(aisleid+i, racks2D.get(i)));
         }
         return aisleList;
 	}
 	
-	private static List<Zone> createZoneList(int num_zones, List<List<Aisle>> aisle2D) {
+	private static List<Zone> createZoneList(int zoneid, int num_zones, List<List<Aisle>> aisle2D) {
         List<Zone> zoneList = new ArrayList<Zone>();
         for(int i = 0; i<num_zones; i++)
         {
-            zoneList.add(new Zone(i, aisle2D.get(i)));
+            zoneList.add(new Zone(zoneid+i, aisle2D.get(i)));
         }
         return zoneList;
-	}
-	private void readPe()
-	{
-		
 	}
 	
 	private static Datacenter createDatacenter(double cost, double costPerMem, double costPerStorage, double costPerBw, List<Zone> zoneList)
@@ -141,32 +117,35 @@ public class Conf_reader {
 	
 	public Datacenter create_infrastructure(String str)
 	{
-		Reader read = new Reader(str);
-		
+		Reader read = new Reader(str);		
 		List<Datacenter> dcList = new ArrayList<Datacenter>();
 		
-
-		int m = 0;
+		int hostid = 0;
 		int rackid = 0;
 		int aisleid = 0;
 		int zoneid = 0;
 		
-		
-
 		for(int i=0; i<read.getDatacenterCount(); i++)
 		{
 			List<Zone> zoneList = new ArrayList<Zone>();
 			List<List<Aisle>> aisle2D = new ArrayList<List<Aisle>>();
+			int nz = zoneid;
 			
 			for(int j=0; j<(read.getZoneList()).get(i); j++)
 			{
 				List<Aisle> aislelist = new ArrayList<Aisle>();
 				List<List<Rack>> rack2D = new ArrayList<List<Rack>>();
+				int na = aisleid;
+				
+				System.out.println("j"+ j);
 
 				for(int k = 0; k<(read.getAisleList()).get(j); k++)
 				{
 					List<Rack> racklist = new ArrayList<Rack>();
 					List<List<Host>> host2D = new ArrayList<List<Host>>();
+					int nr = rackid;
+					
+					System.out.println("k"+ k);
 					
 					for(int l=0; l<(read.getRackList()).get(k); l++)
 					{
@@ -176,29 +155,19 @@ public class Conf_reader {
 						List<Integer> bws = new ArrayList<Integer>();
 						List<Long> storages = new ArrayList<Long>();
 						
-						int n = m;					
+						int n = hostid;					
 						
-						while(m<(read.getHostList()).size()+n)
+						while(hostid<(read.getHostList()).size()+n)
 						{
 							for(int o=1; o<=read.getTypeCount(); o++)
 							{
 								List<Dictionary<String, Object>> l1 = (List<Dictionary<String, Object>>)read.getTypeList();
-								
-								//System.out.print(l1.get(o));
-								
-								Dictionary<String, Object> dict1 = l1.get(o-1);
-								
-								//System.out.print(dict1.get("TYPE_1"));
-								
-								String str1 = "TYPE_" + o;
-								//System.out.print(str1);
-								
+																
+								Dictionary<String, Object> dict1 = l1.get(o-1);								
 								
 								List<Integer> list1 = (List<Integer>) dict1.get("TYPE_"+ o);
 								
-								//System.out.print(list1.get(0));
-								
-								if(list1.contains(m) == true)
+								if(list1.contains(hostid) == true)
 								{
 									int cores = (int) read.getTypeList().get(o-1).get("CORE_"+o);
 									int mips = (int) read.getTypeList().get(o-1).get("MIPS_"+o);
@@ -213,24 +182,32 @@ public class Conf_reader {
 									storages.add(storage);
 								}
 							}
-							m++;							
+							hostid++;
 						}
+						
+							//System.out.println(hostid);
+							
+							System.out.println(l);
+							
+							//System.out.println(read.getHostList().get(l));
+							
 						
 						hostlist = createHostList(n, read.getHostList().get(l), pe2D, rams, bws, storages);
 						host2D.add(hostlist);
+						rackid++;
 					}
 					
-					racklist = createRackList(read.getRackList().get(k), host2D);
+					racklist = createRackList(nr, read.getRackList().get(k+j*i), host2D);
 					rack2D.add(racklist);
+					aisleid++;
 				}
-				aislelist = createAisleList(read.getAisleList().get(j), rack2D);
+				aislelist = createAisleList(na, read.getAisleList().get(j+i), rack2D);
 				aisle2D.add(aislelist);
+				zoneid++;
 				
 			}
-			zoneList = createZoneList(read.getZoneList().get(i), aisle2D);
-			//zoneList = createZoneList(read.getZoneList(), aisle2D);
+			zoneList = createZoneList(nz, read.getZoneList().get(i), aisle2D);
 			dcList.add(createDatacenter(3.0, 0.05, 0.001, 0.0, zoneList));
-			//Datacenter dc = createDatacenter(3.0, 0.05, 0.001, 0.0, zoneList);
 		}
 	
 	return dcList.get(0);
