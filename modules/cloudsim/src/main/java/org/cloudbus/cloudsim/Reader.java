@@ -25,7 +25,7 @@ public class Reader {
    
     private static Integer ntypes;
    
-    private static List<Dictionary<String, Object>> types;
+    public static List<Dictionary<String, Object>> types;
    
     Properties prop = new Properties();
    
@@ -66,13 +66,17 @@ public class Reader {
             String storage = "STORAGE_"+i;
             String bw = "BW_"+i;
             String type = "TYPE_"+i;
-           
+            
+            //System.out.print(Integer.valueOf(prop.getProperty()));
+            
             temp.put(cores, Integer.valueOf(prop.getProperty(cores)));
             temp.put(mips, Integer.valueOf(prop.getProperty(mips)));
             temp.put(ram, Integer.valueOf(prop.getProperty(ram)));
-            temp.put(storage, Integer.valueOf(prop.getProperty(storage)));
+            temp.put(storage, Long.valueOf(prop.getProperty(storage)));
             temp.put(bw, Integer.valueOf(prop.getProperty(bw)));
             temp.put(type, getList(prop.getProperty(type)));
+            
+            //System.out.print(temp.get("TYPE_"+i));
  
             types.add(temp);
         }

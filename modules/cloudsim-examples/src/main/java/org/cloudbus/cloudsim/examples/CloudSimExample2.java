@@ -16,6 +16,8 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.cloudbus.cloudsim.Conf_reader;
+import org.cloudbus.cloudsim.Reader;
 import org.cloudbus.cloudsim.Aisle;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
@@ -75,8 +77,12 @@ public class CloudSimExample2 {
 
 	            	// Second step: Create Datacenters
 	            	//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
-	            	@SuppressWarnings("unused")
-					Datacenter datacenter0 = createDatacenter("Datacenter_0");
+	            	//@SuppressWarnings("unused")
+					Conf_reader r0 = new Conf_reader();
+					Datacenter dc = r0.create_infrastructure("/home/aishwarya/Downloads/cloudsim-cloudsim-4.0/modules/cloudsim-examples/src/main/java/org/cloudbus/cloudsim/examples/GreenSim.conf");
+           	
+	            		            	
+	            	
 
 	            	//Third step: Create Broker
 	            	DatacenterBroker broker = createBroker();
