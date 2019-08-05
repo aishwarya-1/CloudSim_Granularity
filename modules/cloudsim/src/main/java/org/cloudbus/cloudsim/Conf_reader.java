@@ -1,5 +1,17 @@
 package org.cloudbus.cloudsim;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Properties;
+
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -46,24 +58,20 @@ public class Conf_reader {
     	return peList;
 	}
 	
-	private static List<Host> createHostList(int num_hosts, List<List<Pe>> pe2D, int ram, int bw, long storage) {
+	private static List<Host> createHostList(int id, int num_hosts, List<List<Pe>> pe2D, List<Integer> rams, List<Integer> bws, List<Long> storages) {
         List<Host> hostList = new ArrayList<Host>();
-        for(int i = 0; i<num_hosts; i++)
+        for(int i = id; i<num_hosts; i++)
         {
         	//4. Create Host with its id and list of PEs and add them to the list of machines
-	        int hostId=0;
-//	        int ram = 2048; //host memory (MB)
-//	        long storage = 1000000; //host storage
-//	        int bw = 10000;
 
 	        hostList.add(
 	    			new Host(
 	    				i,
-	    				new RamProvisionerSimple(ram),
-	    				new BwProvisionerSimple(bw),
-	    				storage,
-	    				pe2D.get(i),
-	    				new VmSchedulerTimeShared(pe2D.get(i))
+	    				new RamProvisionerSimple(rams.get(i-id)),
+	    				new BwProvisionerSimple(bws.get(i-id)),
+	    				storages.get(i-id),
+	    				pe2D.get(i-id),
+	    				new VmSchedulerTimeShared(pe2D.get(i-id))
 	    			)
 	    		);// This is our machine
         }
@@ -123,7 +131,7 @@ public class Conf_reader {
         // 6. Finally, we need to create a PowerDatacenter object.
         Datacenter datacenter = null;
         try {
-            datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(characteristics.getHostList()), storageList, 0);
+            datacenter = new Datacenter("Datacenter", characteristics, new VmAllocationPolicySimple(characteristics.getHostList()), storageList, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,6 +144,31 @@ public class Conf_reader {
 		Reader read = new Reader("GreenSim.conf");
 		
 		List<Datacenter> dcList = new ArrayList<Datacenter>();
+		
+
+		int m = 0;
+		
+//		List<Host> hostList = new ArrayList<Host>();
+		
+//		for(int i=0; i<read.getTypeCount(); i++)
+//		{
+////			if((read.getTypeList()).get(i)["Type_"+i])
+////			String s = String.valueOf(i);
+////			Enumeration<String> k = read.getTypeList().get(i).keys();
+////			
+////			for(int j=0; j<6; j++)
+////			{
+////				k.nextElement();				
+////			}
+//			
+//			if(((Properties) read.getTypeList().get(i).get("TYPE_"+ i)).contains(i))
+//			{
+//				
+//			}
+//		}
+//		
+//		List<Integer> hostids = new ArrayList<Integer>();
+//		hostids = [for li in read.getTypeList()]
 		
 		for(int i=0; i<read.getDatacenterCount(); i++)
 		{
@@ -156,19 +189,38 @@ public class Conf_reader {
 					{
 						List<Host> hostlist = new ArrayList<Host>();
 						List<List<Pe>> pe2D = new ArrayList<List<Pe>>();
+						List<Integer> rams = new ArrayList<Integer>();
+						List<Integer> bws = new ArrayList<Integer>();
+						List<Long> storages = new ArrayList<Long>();
 						
-						for(int m=0; m<(read.getHostList()).size(); m++)
-						{	
+						int n = m;
+						
+						
+						
+						while(m<(read.getHostList()).size()+n)
+						{
+							for(int o=0; o<read.getTypeCount(); o++)
+							{
+								if(((Properties) read.getTypeList().get(o).get("TYPE_"+ o)).contains(m))
+								{
+									int cores = (int) read.getTypeList().get(o).get("CORE_"+o);
+									int mips = (int) read.getTypeList().get(o).get("MIPS_"+o);
+									int ram = (int) read.getTypeList().get(o).get("RAM_"+o);
+									int bw = (int) read.getTypeList().get(o).get("BW_"+o);
+									long storage = (long) read.getTypeList().get(o).get("STORAGE_"+o);
+									List<Pe> peList = new ArrayList<Pe>();
+									peList = createPEList(cores, mips);
+									pe2D.add(peList);
+									rams.add(ram);
+									bws.add(bw);
+									storages.add(storage);
+								}
+							}
+							m++;
 							
-//							List<Pe> peList = createPEList(2, 1000);
-//							List<Pe> peList1 = createPEList(2, 1000);
-//							pe2D.add(peList);
-//							pe2D.add(peList1);							
-//							List<Host> hostList = createHostList(read.getHostList().get(m), pe2D, 2048, 1000, 1000000);
-//							host2D.add(hostList);
-							
-						}	
-						hostlist = createHostList(read.getHostList().get(l), pe2D, 10, 10, 10);
+						}
+						
+						hostlist = createHostList(m, read.getHostList().get(l), pe2D, rams, bws, storages);
 						rack2D.add(racklist);
 					}
 					racklist = createRackList(read.getRackList().get(k), host2D);

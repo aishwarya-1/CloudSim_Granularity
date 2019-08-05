@@ -68,23 +68,14 @@ public class Reader {
             String type = "TYPE_"+i;
            
             temp.put(cores, Integer.valueOf(prop.getProperty(cores)));
-            temp.put(mips, Integer.valueOf(prop.getProperty(cores)));
-            temp.put(ram, Integer.valueOf(prop.getProperty(cores)));
-            temp.put(storage, Integer.valueOf(prop.getProperty(cores)));
-            temp.put(bw, Integer.valueOf(prop.getProperty(cores)));
+            temp.put(mips, Integer.valueOf(prop.getProperty(mips)));
+            temp.put(ram, Integer.valueOf(prop.getProperty(ram)));
+            temp.put(storage, Integer.valueOf(prop.getProperty(storage)));
+            temp.put(bw, Integer.valueOf(prop.getProperty(bw)));
             temp.put(type, getList(prop.getProperty(type)));
  
             types.add(temp);
         }
-        /*for(int i=0; i<types.size();i++)
-        {
-            List<Integer> temp = types.get(i);
-            for(int j=0;j<temp.size();j++)
-            {
-                System.out.print(temp.get(j));
-            }
-            System.out.println();
-        }*/
     }
    
     public List<Integer> getList(String values){
