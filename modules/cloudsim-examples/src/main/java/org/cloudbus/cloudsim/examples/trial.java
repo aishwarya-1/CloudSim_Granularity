@@ -1,12 +1,3 @@
-/*
- * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Clouds
- * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- *
- * Copyright (c) 2009, The University of Melbourne, Australia
- */
-
 package org.cloudbus.cloudsim.examples;
 
 
@@ -15,11 +6,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.io.*;
 
 import org.cloudbus.cloudsim.Aisle;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
-import org.cloudbus.cloudsim.ConfReader;
+import org.cloudbus.cloudsim.Consts;
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
@@ -30,12 +22,14 @@ import org.cloudbus.cloudsim.Rack;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
+import org.cloudbus.cloudsim.UtilizationModelPlanetLabInMemoryRam;
+import org.cloudbus.cloudsim.UtilizationModelPlanetLabInMemory;
+import org.cloudbus.cloudsim.UtilizationModelPlanetLabInMemoryBw;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.Zone;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.lists.VmList;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -49,42 +43,153 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * The cloudlets will take the same time to
  * complete the execution.
  */
-public class CloudSimExample2 {
+public class trial {
 
 	/** The cloudlet list. */
 	private static List<Cloudlet> cloudletList;
 
 	/** The vmlist. */
 	private static List<Vm> vmlist;
+	
+	private static int nDatacenter;
+
+	private static int nZones;
+
+	private static int naisles;
+
+	private static int nracks;
+
+	private static int nhosts;
+
+	private static List<Integer> A;
+
+	private static List<Integer> B;
+
+	private static List<Integer> C;
+	
+	/*
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		String conf;
+		String workload;
+		
+		if (args.length >= 1 && args[0] != null && !args[0].isEmpty()) {
+		conf = args[0];
+		if (args.length >= 2 && args[1] != null && !args[1].isEmpty()) {
+		workload = args[1];
+		}
+		else
+		{
+		workload = "";
+		}
+		}
+		else {
+		conf = "";
+		workload = "";
+		}
+//		Runner runner = new Runner();
+//		runner.start(conf,workload);
+		start(conf, workload);
+	}*/
+
+
+	private static void getConfiguration(String conf) throws Exception
+	{
+		BufferedReader fr = new BufferedReader(new FileReader(conf));
+		String line = fr.readLine();
+		int i = 1;
+		while(line != null)
+		{
+			String[] st = line.split(":");
+			switch (i) {
+				case 1:
+					nDatacenter = Integer.valueOf(st[1]);
+					break;
+				case 2:
+					nZones = Integer.valueOf(st[1]);
+					break;
+				case 3:
+					naisles = Integer.valueOf(st[1]);
+					break;
+				case 4:
+					nracks = Integer.valueOf(st[1]);
+					break;
+				case 5:
+					nhosts = Integer.valueOf(st[1]);
+					break;
+				default:
+					break;
+			}
+			if(i==6) {
+				A = new ArrayList<Integer>();
+				String[] sub = st[1].split(",");
+				for(int j=0;j<sub.length;j++)
+				{
+				A.add(Integer.valueOf(sub[j].trim()));
+				}
+			}
+			if(i==7) {
+				B = new ArrayList<Integer>();
+				String[] sub = st[1].split(",");
+				for(int j=0;j<sub.length;j++)
+				{
+				B.add(Integer.valueOf(sub[j].trim()));
+				}
+			}
+			if(i==8) {
+				C = new ArrayList<Integer>();
+				String[] sub = st[1].split(",");
+				for(int j=0;j<sub.length;j++)
+				{
+				C.add(Integer.valueOf(sub[j].trim()));
+				}
+			}
+			i++;
+			line = fr.readLine();
+		}
+		fr.close();
+		System.out.println(nDatacenter+" "+nZones+" "+naisles+" "+nracks+" "+nhosts);
+		for(int k=0;k<A.size();k++)
+		{
+			System.out.println(A.get(k)+" "+B.get(k)+" "+C.get(k));
+		}
+
+	}
 
 	/**
 	 * Creates main() to run this example
 	 */
-	@SuppressWarnings("unused")
-	public static void main(String[] args) {
+	public static void main(String arg[]) {
 
 		Log.printLine("Starting CloudSimExample2...");
 
+		//File input = new File(workload);
+		//Log.printLine(input);
+		//File[] files = input.listFiles();
+		//Log.printLine(files);
 	        try {
+	        	
+//	        		String inputFolder = CloudSimExample2_conf.class.getClassLoader().getResource("workload/planetlab/20110303").getPath();
+//	        		Log.printLine(inputFolder);
+	        		getConfiguration("/home/ubuntu/Documents/GreenSim/CloudSim_Granularity/modules/cloudsim-examples/src/main/java/org/cloudbus/cloudsim/examples/conf.txt");
 	        	// First step: Initialize the CloudSim package. It should be called
 	            	// before creating any entities.
 	            	int num_user = 1;   // number of cloud users
 	            	Calendar calendar = Calendar.getInstance();
 	            	boolean trace_flag = false;  // mean trace events
-	            	
-	            	//String conf1 = args[0];
-	            	//String conf2 = args[1];
-	            	
+
 	            	// Initialize the CloudSim library
 	            	CloudSim.init(num_user, calendar, trace_flag);
 
 	            	// Second step: Create Datacenters
 	            	//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
-	            	//@SuppressWarnings("unused")
-					//Conf_reader r0 = new Conf_reader();
-	            	ConfReader r0 = new ConfReader();
-					//Datacenter dc = r0.create_infrastructure("/home/ubuntu/Documents/GreenSim/CloudSim_Granularity/modules/cloudsim-examples/src/main/java/org/cloudbus/cloudsim/examples/GreenSim.conf");
-					Datacenter dc = r0.create_infrastructure("/home/ubuntu/Documents/GreenSim/CloudSim_Granularity/modules/cloudsim-examples/src/main/java/org/cloudbus/cloudsim/examples/GreenSim.conf","/home/ubuntu/Documents/GreenSim/CloudSim_Granularity/modules/cloudsim-examples/src/main/java/org/cloudbus/cloudsim/examples/GreenSim1.conf");
+	            	for (int i = 0;i < nDatacenter; i++) {
+	            		@SuppressWarnings("unused")
+	            		Datacenter datacenter = createDatacenter("Datacenter_"+i);
+	            	}
+//	            	@SuppressWarnings("unused")
+//					Datacenter datacenter0 = createDatacenter("Datacenter_0");
 
 	            	//Third step: Create Broker
 	            	DatacenterBroker broker = createBroker();
@@ -95,7 +200,7 @@ public class CloudSimExample2 {
 
 	            	//VM description
 	            	int vmid = 0;
-	            	int mips = 100;
+	            	int mips = 250;
 	            	long size = 10000; //image size (MB)
 	            	int ram = 512; //vm memory (MB)
 	            	long bw = 1000;
@@ -114,29 +219,20 @@ public class CloudSimExample2 {
 	            	vmid++;
 	            	Vm vm4 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
-	            	vmid++;
-	            	Vm vm5 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
-	            	
-	            	//vmid++;
-	            	//Vm vm6 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
-	            	
 //	            	vmid++;
-//	            	Vm vm7 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+//	            	Vm vm5 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 //	            	
 //	            	vmid++;
-//	            	Vm vm8 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
-//	            	
-//	            	vmid++;
-//	            	Vm vm9 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+//	            	Vm vm6 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
 	            	//add the VMs to the vmList
 	            	vmlist.add(vm1);
 	            	vmlist.add(vm2);
 	            	vmlist.add(vm3);
 	            	vmlist.add(vm4);
-	            	vmlist.add(vm5);
-	            	//vmlist.add(vm6);
-	       
+//	            	vmlist.add(vm5);
+//	            	vmlist.add(vm6);
+
 	            	//submit vm list to the broker
 	            	broker.submitVmList(vmlist);
 
@@ -151,10 +247,21 @@ public class CloudSimExample2 {
 	            	long fileSize = 300;
 	            	long outputSize = 300;
 	            	UtilizationModel utilizationModel = new UtilizationModelFull();
-
+	            	/*for(id=0 ; id<9 ;id++) {
+	            		try {
+	            	Cloudlet cloudlet1 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, new UtilizationModelPlanetLabInMemory(
+	            			files[id].getAbsolutePath(),
+	            			Consts.SCHEDULING_INTERVAL), new UtilizationModelPlanetLabInMemoryRam(files[id].getAbsolutePath(), Consts.SCHEDULING_INTERVAL) , new UtilizationModelPlanetLabInMemoryBw(files[id].getAbsolutePath(), Consts.SCHEDULING_INTERVAL));
+	            	cloudlet1.setUserId(brokerId);
+	            	cloudletList.add(cloudlet1);
+	            		}
+	            		catch(Exception e) {
+	            			e.printStackTrace();
+	            			System.exit(0);
+	            		}
+	            	}*/
 	            	Cloudlet cloudlet1 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 	            	cloudlet1.setUserId(brokerId);
-
 	            	id++;
 	            	Cloudlet cloudlet2 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 	            	cloudlet2.setUserId(brokerId);
@@ -209,23 +316,27 @@ public class CloudSimExample2 {
 	            	//broker.bindCloudletToVm(cloudlet3.getCloudletId(),vm3.getId());
 
 	            	// Sixth step: Starts the simulation
+	            	Log.printLine("Before start simulation");
 	            	CloudSim.startSimulation();
+	            	Log.printLine("After start simulation");
+	            	
 
 
 	            	// Final step: Print results when simulation is over
 	            	List<Cloudlet> newList = broker.getCloudletReceivedList();
-	            	List<Cloudlet> cloudletlist = broker.getCloudletList();
-	            	for (Cloudlet cloudlet : cloudletlist) {
-	            		int cloudlet_vmid = cloudlet.getVmId();
-	            		Log.printLine(cloudlet_vmid);
-	            		Log.printLine("imple"+VmList.getById(broker.getVmsCreatedList(), cloudlet_vmid).getHost().getId());
-	            	}
+//	            	List<Cloudlet> cloudletlist = broker.getCloudletList();
+//	            	for (Cloudlet cloudlet : cloudletlist) {
+//	            		int cloudlet_vmid = cloudlet.getVmId();
+//	            		Log.printLine(cloudlet_vmid);
+//	            		Log.printLine("imple"+VmList.getById(broker.getVmsCreatedList(), cloudlet_vmid).getHost().getId());
+//	            	}
 
 	            	CloudSim.stopSimulation();
+	            	
 
 	            	printCloudletList(newList);
 
-	            	Log.printLine("CloudSimExample2 finished!");
+	            	Log.printLine("trial finished!");
 	        }
 	        catch (Exception e) {
 	            e.printStackTrace();
@@ -233,110 +344,66 @@ public class CloudSimExample2 {
 	        }
 	    }
 
-		@SuppressWarnings("unused")
 		private static Datacenter createDatacenter(String name){
-
-	        // Here are the steps needed to create a PowerDatacenter:
-	        // 1. We need to create a list to store
-	    	//    our machine
-	    	List<Host> hostList = new ArrayList<Host>();
-	    	List<Host> hostList1 = new ArrayList<Host>();
-	    	List<Host> hostList2 = new ArrayList<Host>();
-
-	        // 2. A Machine contains one or more PEs or CPUs/Cores.
-	    	// In this example, it will have only one core.
+			
+			int hostId = 0;
+			int rackId = 0;
+			int aisleId = 0;
+	       
 	    	List<Pe> peList = new ArrayList<Pe>();
-
 	    	int mips = 1000;
-
-	        // 3. Create PEs and add these into a list.
 	    	peList.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
-
-	        //4. Create Host with its id and list of PEs and add them to the list of machines
-	        int hostId=0;
-	        int ram = 2048; //host memory (MB)
-	        long storage = 1000000; //host storage
-	        int bw = 10000;
-
-	        hostList.add(
-	    			new Host(
-	    				hostId,
-	    				new RamProvisionerSimple(ram),
-	    				new BwProvisionerSimple(bw),
-	    				storage,
-	    				peList,
-	    				new VmSchedulerTimeShared(peList)
-	    			)
-	    		);// This is our machine
-	        hostId++;
-	        hostList.add(
-	    			new Host(
-	    				hostId,
-	    				new RamProvisionerSimple(ram),
-	    				new BwProvisionerSimple(bw),
-	    				storage,
-	    				peList,
-	    				new VmSchedulerTimeShared(peList)
-	    			)
-	    		);
-	        hostId++;
-	        hostList.add(
-	    			new Host(
-	    				hostId,
-	    				new RamProvisionerSimple(ram),
-	    				new BwProvisionerSimple(bw),
-	    				storage,
-	    				peList,
-	    				new VmSchedulerTimeShared(peList)
-	    			)
-	    		);
-	        hostId++;
-	        hostList1.add(
-	    			new Host(
-	    				0,
-	    				new RamProvisionerSimple(ram),
-	    				new BwProvisionerSimple(bw),
-	    				storage,
-	    				peList,
-	    				new VmSchedulerTimeShared(peList)
-	    			)
-	    		);
-	        hostId++;
-	        hostList2.add(
-	    			new Host(
-	    				hostId,
-	    				new RamProvisionerSimple(ram),
-	    				new BwProvisionerSimple(bw),
-	    				storage,
-	    				peList,
-	    				new VmSchedulerTimeShared(peList)
-	    			)
-	    		);
-	        hostId++;
-	        hostList2.add(
-	    			new Host(
-	    				hostId,
-	    				new RamProvisionerSimple(ram),
-	    				new BwProvisionerSimple(bw),
-	    				storage,
-	    				peList,
-	    				new VmSchedulerTimeShared(peList)
-	    			)
-	    		);
-	        
-	        List<Rack> rackList = new ArrayList<Rack>();
-	        rackList.add(new Rack(0, hostList));
-	        rackList.add(new Rack(1, hostList1));   
-	        
-	        List<Rack> rackList1 = new ArrayList<Rack>();
-	        rackList1.add(new Rack(2, hostList2));
-	        
-	        List<Aisle> aisleList = new ArrayList<Aisle>();
-	        aisleList.add(new Aisle(0, rackList));
-	        aisleList.add(new Aisle(1, rackList1));
+	        int ram; //host memory (MB)
+	        long storage; //host storage
+	        int bw;
 	        
 	        List<Zone> zoneList = new ArrayList<Zone>();
-	        zoneList.add(new Zone(0, aisleList));
+	        for(int i = 0;i<nZones;i++){
+	        	 List<Aisle> aisleList = new ArrayList<Aisle>();
+	        	for(int j = 0;j<naisles;j++) {
+	        		List<Rack> rackList = new ArrayList<Rack>();
+	        		for(int k = 0;k<nracks;k++) {
+	        			List<Host> hostList = new ArrayList<Host>();
+	        			for(int l = 0; l<nhosts;l++) {
+	        				if(A.contains(hostId)) {
+		        				ram = 2048; //host memory (MB)
+		        			    storage = 1000000; //host storage
+		        			    bw = 10000;
+	        				}
+	        				else if(B.contains(hostId)){
+	        					ram = 2048*2; //host memory (MB)
+		        			    storage = 2000000; //host storage
+		        			    bw = 10000;
+	        				}
+	        				else {
+	        					ram = 2048*4; //host memory (MB)
+		        			    storage = 3000000; //host storage
+		        			    bw = 10000;
+	        				}        				
+	        				hostList.add(
+	        		    			new Host(
+	        		    				hostId,
+	        		    				new RamProvisionerSimple(ram),
+	        		    				new BwProvisionerSimple(bw),
+	        		    				storage,
+	        		    				peList,
+	        		    				new VmSchedulerTimeShared(peList)
+	        		    			)
+	        		    		);
+	        				hostId++;
+	        			}
+	        			rackList.add(new Rack(rackId, hostList));
+	        			rackId++;
+	        			
+	        		}
+	        		aisleList.add(new Aisle(aisleId, rackList));
+	        		aisleId++;
+		        }
+		        zoneList.add(new Zone(i, aisleList));
+	        }
+	        
+//	        List<Zone> zoneList = new ArrayList<Zone>();
+//	        zoneList.add(new Zone(0, aisleList));
 
 
 	        // 5. Create a DatacenterCharacteristics object that stores the
@@ -409,7 +476,9 @@ public class CloudSimExample2 {
 	                     indent + indent + dft.format(cloudlet.getActualCPUTime()) + indent + indent + dft.format(cloudlet.getExecStartTime())+
                              indent + indent + dft.format(cloudlet.getFinishTime()));
 	            }
+	        
 	        }
 
 	    }
 }
+

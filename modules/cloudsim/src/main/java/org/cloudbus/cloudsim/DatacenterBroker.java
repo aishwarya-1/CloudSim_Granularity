@@ -298,7 +298,6 @@ public class DatacenterBroker extends SimEntity {
 	 * @pre ev != $null
 	 * @post $none
 	 */
-	@SuppressWarnings("unlikely-arg-type")
 	protected void processCloudletReturn(SimEvent ev) {
 		Cloudlet cloudlet = (Cloudlet) ev.getData();
 		getCloudletReceivedList().add(cloudlet);
@@ -364,27 +363,34 @@ public class DatacenterBroker extends SimEntity {
 //			Log.printLine("The array Datacenter is: "+ dc);
 //			Log.printLine("The set Datacenter hashset is: " + dc_hash_Set);
 			
-			int count_hostid[] = new int[host_hash_Set.size()];
-			int count_rackid[] = new int[rack_hash_Set.size()];
-			int count_aisleid[] = new int[aisle_hash_Set.size()];
-			int count_zoneid[] = new int[zone_hash_Set.size()];
+			//int count_hostid[] = new int[host_hash_Set.size()];
+			//int count_rackid[] = new int[rack_hash_Set.size()];
+//			int count_aisleid[] = new int[aisle_hash_Set.size()];
+//			int count_zoneid[] = new int[zone_hash_Set.size()];
+			int count_hostid[] = new int[max(hostid)+1];
+			int count_rackid[] = new int[max(rackid)+1];
+			int count_aisleid[] = new int[max(aisleid)+1];
+			int count_zoneid[] = new int[max(zoneid)+1];
 			int count_dcid[] = new int[dc_hash_Set.size()];
+			
+			//int count_dcid[] = new int[max(dcid)+1];
 			
 			for (int i = 0; i < count_vmid.length; i++) {
 				Log.printLine("Vm "+ i + " has " + count_vmid[i]+ " cloudlets");
 			}
 			
-//			for (int i = 0; i<hostid.length; i++) {
-//				count_hostid[hostid[i]]++;
-//			}
+			for (int i = 0; i<hostid.length; i++) {
+				count_hostid[hostid[i]]++;
+			}
 			
-//			for(int i= 0;i<count_hostid.length;i++) {
-//				Log.printLine("Host "+ i + " has " + count_hostid[i]+ " cloudlets");
-//			}
+			for(int i= 0;i<count_hostid.length;i++) {
+				Log.printLine("Host "+ i + " has " + count_hostid[i]+ " cloudlets");
+			}
 			
 			for (int i = 0; i<rackid.length; i++) {
 				count_rackid[rackid[i]]++;
 			}
+			
 			
 			for(int i= 0;i<count_rackid.length;i++) {
 				Log.printLine("Rack "+ i + " has " + count_rackid[i]+ " cloudlets");
@@ -427,6 +433,19 @@ public class DatacenterBroker extends SimEntity {
 			}
 
 		}
+	}
+
+	private int max(int[] a) {
+		// TODO Auto-generated method stub
+		int max = a[0];
+		for(int i = 1;i<a.length; i++)
+		{
+			if(a[i]>max)
+			{
+				max = a[i];
+			}
+		}
+		return max;
 	}
 
 	/**

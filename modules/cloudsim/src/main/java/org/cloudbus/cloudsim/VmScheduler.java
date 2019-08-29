@@ -1,5 +1,6 @@
 /*
- * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
+ConfReader r0 = new ConfReader();
+					Datacenter dc = r0.create_infrastructure("/home/ubuntu/Documents/GreenSim/CloudSim_Granularity/modules/cloudsim-examples/src/main/java/org/cloudbus/cloudsim/examples/GreenSim.conf"); * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
  * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
  * 
  * Copyright (c) 2009-2012, The University of Melbourne, Australia

@@ -17,6 +17,7 @@ import org.cloudbus.cloudsim.Aisle;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerDynamicWorkload;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
+import org.cloudbus.cloudsim.ConfReader;
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
@@ -851,10 +852,14 @@ public class Helper {
 	                
 	                List<Zone> zoneList = createZoneList(aisleList, 1); 
 	                
-					Datacenter datacenter0 = createDatacenter("Datacenter_0",
-																//Datacenter,
-																zoneList
-																);
+//					Datacenter datacenter0 = createDatacenter("Datacenter_0",
+//																//Datacenter,
+//																zoneList
+//															);
+	                // added this - niharika
+	                
+	                ConfReader r0 = new ConfReader();
+					Datacenter dc = r0.create_infrastructure("/home/ubuntu/Documents/GreenSim/CloudSim_Granularity/modules/cloudsim-examples/src/main/java/org/cloudbus/cloudsim/examples/GreenSim.conf","/home/ubuntu/Documents/GreenSim/CloudSim_Granularity/modules/cloudsim-examples/src/main/java/org/cloudbus/cloudsim/examples/GreenSim1.conf");
 
 	            	//Third step: Create Broker
 	            	DatacenterBroker broker = createBroker();
